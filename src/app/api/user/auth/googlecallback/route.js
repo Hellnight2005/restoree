@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { connectToDb } from "@/lib/db";
 import User from "@/models/user";
+import useragent from "express-useragent";
 
 export async function GET(req) {
   await connectToDb();
@@ -16,7 +17,7 @@ export async function GET(req) {
   }
 
   try {
-    // Exchange authorization code for tokens
+    // 1. Exchange authorization code for tokens
     const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -31,7 +32,7 @@ export async function GET(req) {
     const tokenData = await tokenRes.json();
     const { access_token, refresh_token } = tokenData;
 
-    // Use the access token to get user profile information
+    // 2. Use the access token to get user profile information
     const userRes = await fetch(
       "https://www.googleapis.com/oauth2/v2/userinfo",
       {
@@ -40,7 +41,11 @@ export async function GET(req) {
     );
     const profileData = await userRes.json();
 
-    // Find or create the user in your database
+    // 3. Extract device details from the request headers
+    const userAgentHeader = req.headers.get("user-agent");
+    const ua = useragent.parse(userAgentHeader);
+
+    // 4. Find or create the user and update device details
     let user = await User.findOne({ googleId: profileData.id });
 
     if (!user) {
@@ -51,17 +56,57 @@ export async function GET(req) {
         accessToken: access_token,
         profileImageUrl: profileData.picture,
         refreshToken: refresh_token,
+        devices: [
+          {
+            deviceId: ua.fingerprint || null, // You'll need a unique identifier
+            deviceType: ua.isMobile
+              ? "mobile"
+              : ua.isDesktop
+              ? "desktop"
+              : ua.isTablet
+              ? "tablet"
+              : "unknown",
+            os: ua.os,
+            browser: ua.browser,
+            lastLogin: new Date(),
+          },
+        ],
       });
     } else {
       user.name = profileData.name;
       user.profileImageUrl = profileData.picture;
+      if (access_token) {
+        user.accessToken = access_token;
+      }
       if (refresh_token) {
         user.refreshToken = refresh_token;
+      }
+
+      // Find the device and update its last login time
+      const existingDevice = user.devices.find(
+        (device) => device.deviceId === (ua.fingerprint || null)
+      );
+      if (existingDevice) {
+        existingDevice.lastLogin = new Date();
+      } else {
+        user.devices.push({
+          deviceId: ua.fingerprint || null,
+          deviceType: ua.isMobile
+            ? "mobile"
+            : ua.isDesktop
+            ? "desktop"
+            : ua.isTablet
+            ? "tablet"
+            : "unknown",
+          os: ua.os,
+          browser: ua.browser,
+          lastLogin: new Date(),
+        });
       }
       await user.save();
     }
 
-    // Set a secure cookie with user profile data
+    // 5. Set a secure cookie with user profile data
     const userProfile = {
       userId: user._id,
       name: user.name,
@@ -74,7 +119,7 @@ export async function GET(req) {
       path: "/",
     });
 
-    // Redirect the user back to the application
+    // 6. Redirect the user back to the application
     const redirectUrl = new URL("/", req.url);
     return NextResponse.redirect(redirectUrl);
   } catch (error) {

@@ -15,26 +15,33 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: false, // Make optional for Google logins
+    required: false,
   },
   googleId: {
     type: String,
     unique: true,
-    sparse: true, // Allows documents without a googleId
+    sparse: true,
   },
   profileImageUrl: {
     type: String,
   },
   accessToken: {
     type: String,
-    required: false, // Access tokens can expire and be refreshed, so they are not always present
+    required: false,
   },
   refreshToken: {
     type: String,
   },
+  // Add the new role field here
+  role: {
+    type: String,
+    enum: ["user", "admin"], // Defines the possible values for the role
+    default: "user", // Sets a default role for new users
+    required: true,
+  },
 });
 
-// Hash password before saving (only if a password exists)
+// Hash password before saving
 UserSchema.pre("save", async function (next) {
   if (this.password && this.isModified("password")) {
     const salt = await bcrypt.genSalt(10);
