@@ -113,7 +113,7 @@ export async function GET(req) {
       profileImage: user.profileImageUrl,
     };
     cookies().set("profile", JSON.stringify(userProfile), {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
