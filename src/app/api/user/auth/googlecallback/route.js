@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { connectToDb } from "@/lib/db";
 import User from "@/models/user";
-import useragent from "express-useragent";
 
 export async function GET(req) {
   await connectToDb();
@@ -41,11 +40,7 @@ export async function GET(req) {
     );
     const profileData = await userRes.json();
 
-    // 3. Extract device details from the request headers
-    const userAgentHeader = req.headers.get("user-agent");
-    const ua = useragent.parse(userAgentHeader);
-
-    // 4. Find or create the user and update device details
+    // 3. Find or create the user in your database
     let user = await User.findOne({ googleId: profileData.id });
 
     if (!user) {
@@ -56,21 +51,6 @@ export async function GET(req) {
         accessToken: access_token,
         profileImageUrl: profileData.picture,
         refreshToken: refresh_token,
-        devices: [
-          {
-            deviceId: ua.fingerprint || null, // You'll need a unique identifier
-            deviceType: ua.isMobile
-              ? "mobile"
-              : ua.isDesktop
-              ? "desktop"
-              : ua.isTablet
-              ? "tablet"
-              : "unknown",
-            os: ua.os,
-            browser: ua.browser,
-            lastLogin: new Date(),
-          },
-        ],
       });
     } else {
       user.name = profileData.name;
@@ -81,45 +61,23 @@ export async function GET(req) {
       if (refresh_token) {
         user.refreshToken = refresh_token;
       }
-
-      // Find the device and update its last login time
-      const existingDevice = user.devices.find(
-        (device) => device.deviceId === (ua.fingerprint || null)
-      );
-      if (existingDevice) {
-        existingDevice.lastLogin = new Date();
-      } else {
-        user.devices.push({
-          deviceId: ua.fingerprint || null,
-          deviceType: ua.isMobile
-            ? "mobile"
-            : ua.isDesktop
-            ? "desktop"
-            : ua.isTablet
-            ? "tablet"
-            : "unknown",
-          os: ua.os,
-          browser: ua.browser,
-          lastLogin: new Date(),
-        });
-      }
       await user.save();
     }
 
-    // 5. Set a secure cookie with user profile data
+    // 4. Set a secure cookie with user profile data
     const userProfile = {
       userId: user._id,
       name: user.name,
       profileImage: user.profileImageUrl,
     };
     cookies().set("profile", JSON.stringify(userProfile), {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
     });
 
-    // 6. Redirect the user back to the application
+    // 5. Redirect the user back to the application
     const redirectUrl = new URL("/", req.url);
     return NextResponse.redirect(redirectUrl);
   } catch (error) {
