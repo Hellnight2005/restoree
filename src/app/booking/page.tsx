@@ -1,374 +1,267 @@
-"use client"
-
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { useAppState } from '@/components/AppStateProvider'
-import { User, Mail, Phone, Tag, Package, Calendar, StickyNote } from 'lucide-react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-const mockUser = {
-  id: 'u_1',
-  name: 'Sarah Johnson',
-  email: 'sarah.johnson@example.com',
-  phone: '+1 555 123 4567',
-  createdAt: new Date(),
+"use client";
+import React, { useState, ChangeEvent, FormEvent } from 'react';
+// Define the shape of the form data
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  brand: string;
+  product: string;
+  date: string;
+  time: string;
+  notes: string;
 }
 
-const times = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00']
+// Define the shape of the errors object
+interface FormErrors {
+  name?: string;
+  email?: string;
+  phone?: string;
+  time?: string;
+}
 
-export default function BookingPage() {
-  if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger)
-  }
+// Define the props for the reusable Input component
+interface InputProps {
+  label: string;
+  type: string;
+  name: keyof FormData;
+  placeholder?: string;
+  error?: string;
+}
 
-  const router = useRouter()
-  const params = useSearchParams()
-  const { selectedService, setSelectedService, user, login, blockedDates, blockedTimes } = useAppState()
+// Main component for the booking form
+const App = () => {
+  // Array of available time slots
+  const TIMESLOTS = [
+    "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+    "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"
+  ];
 
-  const sectionRef = useRef<HTMLDivElement | null>(null)
-  const formRef = useRef<HTMLDivElement | null>(null)
-  const timeRef = useRef<HTMLDivElement | null>(null)
+  // Initial state for the form data
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    phone: "",
+    brand: "",
+    product: "",
+    date: "",
+    time: "",
+    notes: ""
+  });
 
-  const serviceFromQuery = useMemo(() => {
-    const id = params.get('service') || params.get('serviceId')
-    const title = params.get('title')
-    const description = params.get('description')
-    const image = params.get('image')
-    const price = params.get('price') || undefined
-    const estimatedDuration = params.get('duration') || undefined
-    if (!id) return null
-    return { id, title: title || id, description: description || '', image: image || '', price, estimatedDuration }
-  }, [params])
+  // State for validation errors
+  const [errors, setErrors] = useState<FormErrors>({});
 
-  useEffect(() => {
-    if (serviceFromQuery) {
-      setSelectedService({
-        id: serviceFromQuery.id,
-        title: serviceFromQuery.title || 'Selected Service',
-        description: serviceFromQuery.description || '',
-        summary: '',
-        process: [],
-        timeline: serviceFromQuery.estimatedDuration || '',
-        image: serviceFromQuery.image || '/images/hero-bg.jpg',
-        price: serviceFromQuery.price,
-        estimatedDuration: serviceFromQuery.estimatedDuration,
-      })
+  // Handle input changes with explicit typing for the event
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({ ...prevData, [name as keyof FormData]: value }));
+  };
+
+  // Handle time slot selection
+  const handleTimeSelect = (time: string) => {
+    setFormData(prevData => ({ ...prevData, time }));
+    setErrors(prevErrors => ({ ...prevErrors, time: undefined }));
+  };
+
+  // Validate the form data
+  const validate = () => {
+    const newErrors: FormErrors = {};
+    if (!formData.name) newErrors.name = "Name is required.";
+    if (!formData.email) {
+      newErrors.email = "Email is required.";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email address is invalid.";
     }
-  }, [serviceFromQuery, setSelectedService])
+    if (!formData.phone) newErrors.phone = "Phone number is required.";
+    if (!formData.time) newErrors.time = "A time slot is required.";
 
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true)
-  useEffect(() => {
-    if (isLoggedIn && !user) {
-      login(mockUser as any, false)
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle form submission with explicit typing for the event
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (validate()) {
+      console.log("Form data submitted:", JSON.stringify(formData, null, 2));
+      // You can add your API call or other logic here
+      alert("Form submitted successfully! Check the console for data.");
+    } else {
+      alert("Please correct the errors in the form.");
     }
-  }, [isLoggedIn, user, login])
+  };
 
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    brand: '',
-    product: '',
-    date: '',
-    time: '',
-    notes: '',
-  })
+  // Handle form reset
+  const handleReset = () => {
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      brand: "",
+      product: "",
+      date: "",
+      time: "",
+      notes: ""
+    });
+    setErrors({});
+  };
 
-  const [errors, setErrors] = useState<{ [k: string]: string }>({})
-
-  useEffect(() => {
-    if (user) {
-      setForm((f) => ({ ...f, name: user.name, email: user.email, phone: user.phone || '' }))
-    }
-  }, [user])
-
-  const isDateBlocked = (d: string) => blockedDates.includes(d)
-  const isTimeBlocked = (t: string) => blockedTimes.includes(t)
-
-  const [showConfirm, setShowConfirm] = useState(false)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.summary-card', {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: 'power2.out',
-      })
-
-      gsap.from('.booking-field', {
-        opacity: 0,
-        y: 12,
-        duration: 0.6,
-        stagger: 0.06,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: formRef.current,
-          start: 'top 85%'
-        }
-      })
-
-      gsap.from('.time-chip', {
-        opacity: 0,
-        scale: 0.9,
-        duration: 0.4,
-        stagger: 0.05,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: timeRef.current,
-          start: 'top 90%'
-        }
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
-  if (!isLoggedIn) {
-    return (
-      <div className="min-h-screen section-padding">
-        <div className="container-custom">
-          <div className="card p-8 max-w-lg mx-auto text-center">
-            <h1 className="font-copperplate text-3xl font-bold mb-4">Please Log In</h1>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">You must be logged in to book a service.</p>
-            <button
-              className="btn-primary"
-              onClick={() => {
-                setIsLoggedIn(true)
-              }}
-            >
-              Log In (Mock)
-            </button>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // Common input component to reduce repetition and ensure consistent styling
+  const Input: React.FC<InputProps> = ({ label, type, name, placeholder, error }) => (
+    <div className="mb-4">
+      <label htmlFor={name} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        {label}
+      </label>
+      <input
+        type={type}
+        id={name}
+        name={name}
+        placeholder={placeholder}
+        value={formData[name]}
+        onChange={handleChange}
+        className={`w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+          } focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
+        required={error ? true : false}
+      />
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-white dark:bg-dark-bg">
-      <motion.section ref={sectionRef} className="section-padding" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-        <div className="container-custom">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Service Summary */}
-            <motion.div className="summary-card card p-6 lg:col-span-1 lg:sticky lg:top-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              {selectedService && (
-                <>
-                  <div className="h-48 rounded-xl overflow-hidden mb-4">
-                    <div
-                      className="w-full h-full bg-cover bg-center"
-                      style={{ backgroundImage: `url(${selectedService.image})` }}
-                    />
-                  </div>
-                  <h2 className="text-2xl font-bold mb-2">{selectedService.title}</h2>
-                  <p className="text-gray-600 dark:text-gray-300 mb-3 font-serif">{selectedService.description}</p>
-                  {(selectedService.price || selectedService.estimatedDuration) && (
-                    <div className="flex items-center gap-4 text-sm text-gray-700 dark:text-gray-300">
-                      {selectedService.price && <span>Price: {selectedService.price}</span>}
-                      {selectedService.estimatedDuration && <span>Duration: {selectedService.estimatedDuration}</span>}
-                    </div>
-                  )}
-                </>
-              )}
-            </motion.div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-200 dark:bg-gray-900 p-4 font-sans">
+      <div
+        className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-xl max-w-lg w-full transform transition-all duration-500 ease-out animate-slide-up"
+        style={{
+          animation: 'slide-up 0.6s ease-out forwards',
+          opacity: 0,
+        }}
+      >
+        <style>
+          {`
+            @keyframes slide-up {
+              from {
+                opacity: 0;
+                transform: translateY(20px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+          `}
+        </style>
+        <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-2">
+          Book a Service
+        </h1>
+        <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
+          Please fill out the form below to book your service appointment.
+        </p>
 
-            {/* Booking Form */}
-            <motion.div ref={formRef} className="card p-6 lg:col-span-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-copperplate text-2xl font-semibold">Book Your Appointment</h3>
-                {user && <p className="text-sm text-gray-600 dark:text-gray-400">Welcome back, {user.name.split(' ')[0]}!</p>}
-              </div>
-              {!isLoggedIn && (
-                <div className="mb-4 p-4 rounded bg-yellow-50 text-yellow-800">Please log in to continue</div>
-              )}
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Full Name"
+              type="text"
+              name="name"
+              placeholder="John Doe"
+              error={errors.name}
+            />
+            <Input
+              label="Email Address"
+              type="email"
+              name="email"
+              placeholder="john.doe@example.com"
+              error={errors.email}
+            />
+            <Input
+              label="Phone Number"
+              type="tel"
+              name="phone"
+              placeholder="123-456-7890"
+              error={errors.phone}
+            />
+            <Input
+              label="Brand"
+              type="text"
+              name="brand"
+              placeholder="e.g., Apple, Samsung"
+            />
+            <Input
+              label="Product"
+              type="text"
+              name="product"
+              placeholder="e.g., MacBook Pro, Galaxy S21"
+            />
+            <Input
+              label="Date"
+              type="date"
+              name="date"
+            />
 
-              {/* Progress */}
-              <div className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden mt-2 mb-4">
-                {(() => {
-                  const total = 7
-                  const filled = [form.name, form.email, form.phone, form.brand, form.product, form.date, form.time].filter(Boolean).length
-                  const width = `${Math.round((filled / total) * 100)}%`
-                  return <div className="h-full bg-fawn transition-all duration-500" style={{ width }} />
-                })()}
+            {/* Time Slot Selection */}
+            <div className="md:col-span-2 mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Select a Time
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {TIMESLOTS.map((timeSlot) => (
+                  <button
+                    key={timeSlot}
+                    type="button"
+                    onClick={() => handleTimeSelect(timeSlot)}
+                    className={`
+                      px-4 py-2 rounded-lg font-semibold transition-all duration-300
+                      ${formData.time === timeSlot
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      }
+                      border border-gray-300 dark:border-gray-600
+                    `}
+                  >
+                    {timeSlot}
+                  </button>
+                ))}
               </div>
+              {errors.time && <p className="mt-1 text-xs text-red-500">{errors.time}</p>}
+            </div>
 
-              {/* Personal & Item Details */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
-                <div className="field booking-field">
-                  <label className="label">Name</label>
-                  <div className="relative">
-                    <User className="icon" />
-                    <input className="input pl-11" placeholder="Your full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-                  </div>
-                  {errors.name && <p className="help">{errors.name}</p>}
-                </div>
-                <div className="field booking-field">
-                  <label className="label">Email</label>
-                  <div className="relative">
-                    <Mail className="icon" />
-                    <input className="input pl-11" placeholder="you@example.com" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-                  </div>
-                  {errors.email && <p className="help">{errors.email}</p>}
-                </div>
-                <div className="field booking-field">
-                  <label className="label">Phone</label>
-                  <div className="relative">
-                    <Phone className="icon" />
-                    <input className="input pl-11" placeholder="+1 555 123 4567" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-                  </div>
-                  {errors.phone && <p className="help">{errors.phone}</p>}
-                </div>
-                <div className="field booking-field">
-                  <label className="label">Selected Service</label>
-                  <input className="input" value={selectedService?.title || ''} readOnly />
-                </div>
-                <div className="field booking-field">
-                  <label className="label">Brand</label>
-                  <div className="relative">
-                    <Tag className="icon" />
-                    <input className="input pl-11" placeholder="e.g., Chanel, Gucci, Hermès" value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} />
-                  </div>
-                  {errors.brand && <p className="help">{errors.brand}</p>}
-                </div>
-                <div className="field booking-field">
-                  <label className="label">Product</label>
-                  <div className="relative">
-                    <Package className="icon" />
-                    <input className="input pl-11" placeholder="Official product name / model" value={form.product} onChange={(e) => setForm({ ...form, product: e.target.value })} />
-                  </div>
-                  {errors.product && <p className="help">{errors.product}</p>}
-                </div>
-              </div>
-
-              {/* Schedule & Notes */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
-                <div className="field booking-field">
-                  <label className="label">Preferred Date</label>
-                  <div className="relative">
-                    <Calendar className="icon" />
-                    <input
-                      className="input pl-11"
-                      type="date"
-                      value={form.date}
-                      onChange={(e) => {
-                        const d = e.target.value
-                        if (isDateBlocked(d)) {
-                          setErrors((er) => ({ ...er, date: 'Selected date is unavailable. Please choose another date.' }))
-                        } else {
-                          setErrors((er) => ({ ...er, date: '' }))
-                        }
-                        setForm({ ...form, date: d })
-                      }}
-                    />
-                  </div>
-                  {errors.date && <p className="help">{errors.date}</p>}
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Unavailable: {blockedDates.join(', ') || 'None'}</p>
-                </div>
-                <div className="field booking-field">
-                  <label className="label">Preferred Time</label>
-                  <div>
-                    <div ref={timeRef} className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                      {times.map((t) => {
-                        const disabled = isTimeBlocked(t)
-                        const selected = form.time === t
-                        return (
-                          <button
-                            key={t}
-                            type="button"
-                            disabled={disabled}
-                            onClick={() => setForm({ ...form, time: t })}
-                            className={`time-chip px-3 py-2 rounded-full border text-sm transition-all ${
-                              selected ? 'bg-fawn text-white border-fawn shadow' : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200'
-                            } ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-md'}`}
-                          >
-                            {t}
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-                  {errors.time && <p className="help">{errors.time}</p>}
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Unavailable: {blockedTimes.join(', ') || 'None'}</p>
-                </div>
-              </div>
-
-              <div className="field booking-field mt-6">
-                <label className="label">Special Notes</label>
-                <div className="relative">
-                  <StickyNote className="icon" />
-                  <textarea className="input pl-11" rows={4} placeholder="Anything we should know? (e.g., scuffs on bottom, zipper issues)" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
-                </div>
-              </div>
-
-              <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                <motion.button
-                  className={`btn-primary ${(() => {
-                    const required = [form.name, form.email, form.phone, form.brand, form.product, form.date, form.time]
-                    const can = required.every(Boolean) && !(errors.date || errors.time)
-                    return can ? '' : 'opacity-50 cursor-not-allowed'
-                  })()}`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    const newErrors: { [k: string]: string } = {}
-                    if (!form.name.trim()) newErrors.name = 'Name is required.'
-                    if (!form.email.trim()) newErrors.email = 'Email is required.'
-                    if (!form.phone.trim()) newErrors.phone = 'Phone is required.'
-                    if (!form.brand.trim()) newErrors.brand = 'Brand is required.'
-                    if (!form.product.trim()) newErrors.product = 'Product is required.'
-                    if (!form.date.trim()) newErrors.date = 'Date is required.'
-                    if (!form.time.trim()) newErrors.time = 'Time is required.'
-                    if (form.date && isDateBlocked(form.date)) newErrors.date = 'Selected date is unavailable.'
-                    if (form.time && isTimeBlocked(form.time)) newErrors.time = 'Selected time is unavailable.'
-                    setErrors(newErrors)
-                    if (Object.keys(newErrors).length === 0) setShowConfirm(true)
-                  }}
-                >
-                  Review & Confirm
-                </motion.button>
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  onClick={() => {
-                    setForm({ name: '', email: '', phone: '', brand: '', product: '', date: '', time: '', notes: '' })
-                    setErrors({})
-                  }}
-                >
-                  Reset
-                </button>
-              </div>
-            </motion.div>
           </div>
-        </div>
-      </motion.section>
 
-      {/* Confirmation Modal */}
-      {showConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="card max-w-md w-full p-6">
-            <h4 className="text-xl font-semibold mb-2">Booking Confirmed</h4>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">We have received your booking. A confirmation email would be sent in a real app.</p>
-            <button className="btn-primary" onClick={() => setShowConfirm(false)}>Close</button>
+          <div className="mb-4">
+            <label htmlFor="notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Additional Notes
+            </label>
+            <textarea
+              id="notes"
+              name="notes"
+              rows={4}
+              placeholder="Describe the issue or service needed..."
+              value={formData.notes}
+              onChange={handleChange}
+              className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+            />
           </div>
-        </div>
-      )}
 
-      <style jsx global>{`
-        .input {
-          @apply w-full px-5 py-3 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-fawn focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white;
-        }
-        textarea.input { @apply rounded-2xl; }
-        .field { @apply flex flex-col; }
-        .label { @apply text-sm font-medium text-gray-700 dark:text-gray-300 mb-1; }
-        .help { @apply text-xs text-red-600 mt-1; }
-        .icon { @apply absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400; }
-        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6); }
-        input[type="date"]:disabled { opacity: 0.5; }
-      `}</style>
+          <div className="flex flex-col sm:flex-row gap-4 mt-6">
+            <button
+              type="submit"
+              className="w-full sm:w-1/2 bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
+            >
+              Submit
+            </button>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="w-full sm:w-1/2 bg-transparent text-gray-600 dark:text-gray-300 font-semibold py-3 px-6 rounded-lg border border-gray-400 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300"
+            >
+              Reset
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-
+export default App;

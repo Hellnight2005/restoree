@@ -1,5 +1,3 @@
-// models/booking.js
-
 import mongoose from "mongoose";
 
 const BookingSchema = new mongoose.Schema(
@@ -38,15 +36,19 @@ const BookingSchema = new mongoose.Schema(
     },
     serviceType: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Service", // This connects the booking to the Service model
+      ref: "Service",
+      required: true,
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 
-const Booking =
-  mongoose.models.Booking || mongoose.model("Booking", BookingSchema);
-export default Booking;
+export default mongoose.models.Booking ||
+  mongoose.model("Booking", BookingSchema);
