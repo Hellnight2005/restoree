@@ -1,5 +1,3 @@
-// components/Header.jsx
-
 "use client"
 
 import { useState, useEffect } from 'react'
@@ -10,10 +8,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 
+// Updated to include a role
 type UserProfile = {
   userId: string;
   name: string;
   profileImage: string;
+  role: string;
 };
 
 const Header = () => {
@@ -26,40 +26,48 @@ const Header = () => {
   useEffect(() => {
     setMounted(true);
 
-    // Function to check and set the user profile from the cookie
     const checkUserProfile = () => {
       const profileCookie = Cookies.get('profile');
       if (profileCookie) {
         try {
+          // Parse the role from the cookie
           setUserProfile(JSON.parse(profileCookie));
         } catch (e) {
           console.error("Failed to parse profile cookie", e);
-          setUserProfile(null); // Clear state if cookie is invalid
+          setUserProfile(null);
         }
       } else {
-        setUserProfile(null); // Clear state if cookie is removed
+        setUserProfile(null);
       }
     };
 
-    // Initial check when the component mounts
     checkUserProfile();
+    const interval = setInterval(checkUserProfile, 1000);
 
-    // Set up a periodic check to handle the redirect scenario
-    const interval = setInterval(checkUserProfile, 1000); // Check every second
-
-    // Cleanup function to clear the interval
     return () => clearInterval(interval);
 
-  }, []); // Empty dependency array ensures this runs once
+  }, []);
 
-  const navItems = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    { name: 'Services', href: '/services' },
-    { name: 'Gallery', href: '/gallery' },
-    { name: 'Contact', href: '/contact' },
-    { name: 'Blog', href: '/blog' }
-  ]
+  // Use a single set of navigation items and filter based on role
+  const allNavItems = [
+    { name: 'Home', href: '/', role: 'public' },
+    { name: 'About', href: '/about', role: 'public' },
+    { name: 'Services', href: '/services', role: 'public' },
+    { name: 'Gallery', href: '/gallery', role: 'public' },
+    { name: 'Contact', href: '/contact', role: 'public' },
+    { name: 'Blog', href: '/blog', role: 'public' },
+    { name: 'Dashboard', href: '/admin', role: 'admin' },
+    { name: 'services', href: '/admin', role: 'admin' },
+  ];
+
+  const getFilteredNavItems = (userRole: string | null) => {
+    if (userRole === 'admin') {
+      return allNavItems.filter(item => item.role === 'admin' || item.role === 'public');
+    }
+    return allNavItems.filter(item => item.role === 'public');
+  };
+
+  const navItems = getFilteredNavItems(userProfile?.role ?? null);
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark')

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation"; // ✅ Correct import for App Router
 
 // Define the shape of the form data
 interface FormData {
@@ -67,6 +68,8 @@ const Input: React.FC<InputProps> = ({
 );
 
 const App = () => {
+  const router = useRouter(); // ✅ Initialize the hook
+
   const TIMESLOTS = [
     "9:00 AM",
     "10:00 AM",
@@ -79,7 +82,6 @@ const App = () => {
     "5:00 PM",
   ];
 
-  // ✅ dynamic service options
   const [services, setServices] = useState<string[]>([]);
   const [loadingServices, setLoadingServices] = useState<boolean>(false);
 
@@ -101,17 +103,15 @@ const App = () => {
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
   const [userId, setUserId] = useState<string>("");
 
-  // ✅ Fetch services from API
   useEffect(() => {
     const fetchServices = async () => {
       try {
         setLoadingServices(true);
-        const res = await fetch("/api/Service/create_service"); // <-- FIXED ENDPOINT
+        const res = await fetch("/api/Service/create_service");
         const data = await res.json();
         console.log("Fetched services:", data.data);
 
         if (data.success && Array.isArray(data.data)) {
-          // backend already returns ["Shoe Polishing", "Leather Repair", ...]
           setServices(data.data);
         }
       } catch (err) {
@@ -143,9 +143,7 @@ const App = () => {
   }, []);
 
   const handleChange = (
-    e: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -202,6 +200,10 @@ const App = () => {
           setSubmitMessage("Booking created successfully!");
           setIsSuccess(true);
           handleReset();
+
+          setTimeout(() => {
+            router.push("/User_booking");
+          }, 1000);
         } else {
           const errorData = await response.json();
           setSubmitMessage(
@@ -222,7 +224,6 @@ const App = () => {
       setIsSuccess(false);
     }
   };
-
   const handleReset = () => {
     setFormData({
       name: "",
@@ -253,8 +254,8 @@ const App = () => {
         {submitMessage && (
           <div
             className={`p-3 rounded-lg text-sm text-center mb-4 ${isSuccess
-              ? "bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200"
-              : "bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200"
+                ? "bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200"
+                : "bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200"
               }`}
           >
             {submitMessage}
@@ -325,8 +326,8 @@ const App = () => {
                 value={formData.serviceType}
                 onChange={handleChange}
                 className={`w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-800 border ${errors.serviceType
-                  ? "border-red-500"
-                  : "border-gray-300 dark:border-gray-600"
+                    ? "border-red-500"
+                    : "border-gray-300 dark:border-gray-600"
                   } focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all duration-300`}
               >
                 <option value="">

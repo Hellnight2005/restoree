@@ -69,6 +69,7 @@ export async function GET(req) {
       userId: user._id,
       name: user.name,
       profileImage: user.profileImageUrl,
+      role: user.role,
     };
     cookies().set("profile", JSON.stringify(userProfile), {
       httpOnly: false,
