@@ -132,6 +132,10 @@ const UserBookingPage = () => {
 
                         <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
                             <div className="flex items-center">
+                                <span className="font-medium mr-2">Client:</span>
+                                <span>{booking.clientName}</span>
+                            </div>
+                            <div className="flex items-center">
                                 <span className="font-medium mr-2">📅 Date:</span>
                                 <span>{new Date(booking.date).toLocaleDateString()}</span>
                             </div>

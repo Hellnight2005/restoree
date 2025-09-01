@@ -249,7 +249,7 @@ const AdminDashboard = () => {
                     </p>
                     <button onClick={() => setShowAddServiceModal(true)} className="btn-primary w-full bg-fawn text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-fawn-dark transition-all duration-300">Add Service</button>
                 </div>
-                <div className="card bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl text-center">
+                {/* <div className="card bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl text-center">
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                         Upload Gallery
                     </h3>
@@ -266,12 +266,12 @@ const AdminDashboard = () => {
                         Check business performance
                     </p>
                     <button onClick={() => setShowAnalyticsModal(true)} className="btn-primary w-full bg-fawn text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-fawn-dark transition-all duration-300">View Analytics</button>
-                </div>
+                </div> */}
             </motion.div>
 
             {selectedBooking && <BookingDetailsModal booking={selectedBooking} onClose={() => setSelectedBooking(null)} onUpdate={fetchData} />}
             {showAddServiceModal && <AddServiceModal onClose={() => { setShowAddServiceModal(false); fetchData(); }} />}
-            {showUploadGalleryModal && <UploadGalleryModal onClose={() => setShowUploadGalleryModal(false)} />}
+            {/* {showUploadGalleryModal && <UploadGalleryModal onClose={() => setShowUploadGalleryModal(false)} />} */}
             {/* {showAnalyticsModal && <AnalyticsModal onClose={() => setShowAnalyticsModal(false)} pieData={pieChartData} barData={barChartData} />} */}
         </div>
     );
