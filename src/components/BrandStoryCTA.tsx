@@ -41,7 +41,7 @@ const BrandStoryCTA = () => {
         }
       )
 
-      // ✅ FIXED: Animate stats numbers correctly
+      // Animate stats numbers correctly
       statsRef.current.forEach((stat, index) => {
         if (stat) {
           const targetNumber = stats[index].number
@@ -141,7 +141,7 @@ const BrandStoryCTA = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 Discover Our Story
-                {/* <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" /> */}
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
               </motion.button>
             </Link>
           </motion.div>
@@ -183,7 +183,7 @@ const BrandStoryCTA = () => {
                   {/* Initial text will be animated by GSAP */}
                   0
                 </div>
-                <div className="text-gray-800 font-serif">
+                <div className="text-gray-900 font-serif md:dark:text-white">
                   {stat.label}
                 </div>
               </motion.div>
