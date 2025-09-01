@@ -183,7 +183,7 @@ const BrandStoryCTA = () => {
                   {/* Initial text will be animated by GSAP */}
                   0
                 </div>
-                <div className="text-gray-300 font-serif">
+                <div className="text-gray-800 font-serif">
                   {stat.label}
                 </div>
               </motion.div>
