@@ -1,0 +1,2467 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Restoration Certificate | v16.7.2</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+    ></script>
+    <style>
+      :root {
+        --gold: #c9a24a;
+        --gold-deep: #b18327;
+        --ink: #111;
+        --ink-soft: #3e4146;
+        --line: #ddd4c4;
+        --panel: #ffffff;
+        --accent-bg: #f7f3eb;
+        --bar-before: #d7cab6;
+        --bar-improve: linear-gradient(90deg, #c9a24a, #b18327);
+        --bar-regress: #e26b6b;
+        --ba-divider: #e1d6c6;
+        --ba-head-bg: #f6f1e9;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        background: #fff;
+        font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto;
+        font-size: 15px;
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+      }
+      body.plain * {
+        background: #fff !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        background-image: none !important;
+      }
+      a {
+        color: var(--gold);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      body.plain a {
+        color: #000;
+        text-decoration: none;
+      }
+      .wrap {
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 20px 30px 70px;
+        display: grid;
+        gap: 44px;
+      }
+      @media (min-width: 1250px) {
+        .wrap {
+          grid-template-columns: 470px 1fr;
+        }
+      }
+      @media (max-width: 1249px) {
+        .wrap {
+          grid-template-columns: 1fr;
+        }
+      }
+      fieldset {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 16px 18px 20px;
+        background: var(--panel);
+      }
+      legend {
+        font: 700 0.65rem "Inter";
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 0 10px;
+        color: var(--ink-soft);
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin: 0 0 12px;
+        font: 600 0.58rem "Inter";
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+      }
+      input[type="text"],
+      input[type="date"],
+      select,
+      textarea {
+        border: 1px solid var(--line);
+        background: #fff;
+        padding: 9px 11px;
+        border-radius: 10px;
+        font: 600 0.82rem "Inter";
+        color: var(--ink);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 62px;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: 2px solid #e9dfc6;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+      }
+      .row > * {
+        flex: 1;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 4px;
+      }
+      button {
+        background: linear-gradient(120deg, var(--gold), var(--gold-deep));
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        font: 700 0.62rem "Inter";
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      button.secondary {
+        background: #fff;
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+      .micro {
+        font: 600 0.5rem/1.3 "Inter";
+        color: var(--ink-soft);
+        letter-spacing: 0.05em;
+        margin-top: 2px;
+      }
+      .tag-grid {
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      }
+      .tag-item {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        font: 600 0.6rem "Inter";
+        background: #fff;
+        border: 1px solid #ece4d6;
+        padding: 6px 8px;
+        border-radius: 10px;
+      }
+      .tag-item input {
+        margin: 0;
+        width: 15px;
+        height: 15px;
+      }
+      .add-line {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .add-line input {
+        flex: 1;
+      }
+      .cert-shell {
+        background: #fff;
+        border: 3px solid var(--gold);
+        border-radius: 36px;
+        padding: 54px 60px 74px;
+        max-width: 1130px;
+        margin: 0 auto;
+        position: relative;
+        box-shadow: 0 22px 46px -18px rgba(0, 0, 0, 0.15);
+      }
+      body.plain .cert-shell {
+        border: 2px solid #000;
+        box-shadow: none;
+      }
+      .logo-wrap {
+        text-align: center;
+        margin: 0 0 8px;
+        min-height: 122px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .cert-logo {
+        max-width: 420px;
+        height: 120px;
+        object-fit: contain;
+        background: #fff;
+        filter: contrast(1.05);
+      }
+      .logo-fallback {
+        font: 800 2.4rem "Playfair Display";
+        color: var(--gold);
+        letter-spacing: 2px;
+        display: none;
+      }
+      .cert-title {
+        text-align: center;
+        font: 800 2.3rem "Playfair Display";
+        margin: 4px 0 20px;
+        text-transform: uppercase;
+        color: #101010;
+      }
+      .date-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        justify-content: center;
+        font: 700 0.7rem "Inter";
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin: 0 0 18px;
+      }
+      .date-bar span {
+        background: #f4efe5;
+        padding: 8px 16px;
+        border-radius: 42px;
+        border: 1px solid var(--gold);
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      body.plain .date-bar span {
+        background: #fff;
+      }
+      .gen-line {
+        text-align: center;
+        font: 600 0.5rem "Inter";
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        margin: -4px 0 26px;
+      }
+      .section-head {
+        font: 700 0.68rem "Inter";
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        text-align: center;
+        color: var(--ink-soft);
+        margin: 30px 0 16px;
+      }
+      .info-grid {
+        display: grid;
+        gap: 18px 18px;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      }
+      .info-box {
+        background: #fff;
+        border: 1.6px solid #e6dac6;
+        border-radius: 16px;
+        padding: 12px 15px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-height: 76px;
+      }
+      body.plain .info-box {
+        border: 1px solid #000;
+      }
+      .info-box .lbl {
+        font: 600 0.52rem "Inter";
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+      }
+      .info-box .val {
+        font: 700 0.86rem "Inter";
+        line-height: 1.15;
+        letter-spacing: 0.3px;
+        word-break: break-word;
+        color: #121212;
+      }
+
+      /* ===== ALIGNED BEFORE / AFTER BLOCK ===== */
+      .ba-block {
+        position: relative;
+        margin: 12px 0 50px;
+        border: 2px solid var(--gold);
+        border-radius: 24px;
+        padding: 18px 28px 26px;
+        background: #fff;
+      }
+      body.plain .ba-block {
+        border: 1px solid #000;
+      }
+      .ba-block:before {
+        content: "";
+        position: absolute;
+        top: 60px;
+        bottom: 26px;
+        left: 50%;
+        width: 1px;
+        background: var(--ba-divider);
+        pointer-events: none;
+      }
+      .ba-headers {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        margin: 0 0 14px;
+        position: relative;
+      }
+      .ba-head {
+        text-align: center;
+        font: 700 0.75rem "Inter";
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        padding: 10px 4px 9px;
+        background: var(--ba-head-bg);
+        border: 1px solid var(--gold);
+        color: #1b1b1b;
+        border-bottom: 2px solid var(--gold);
+      }
+      .ba-head:first-child {
+        border-top-left-radius: 14px;
+        border-right: none;
+      }
+      .ba-head:last-child {
+        border-top-right-radius: 14px;
+        border-left: none;
+      }
+      body.plain .ba-head {
+        background: #fff;
+      }
+      .ba-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 26px;
+      }
+      .ba-cell {
+        position: relative;
+        background: #f0ede8;
+        border: 1px solid #dacfbf;
+        border-radius: 16px;
+        height: 180px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font: 700 0.6rem "Inter";
+        color: #5b5b5b;
+        box-shadow: 0 4px 12px -6px rgba(0, 0, 0, 0.22);
+      }
+      .ba-cell img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .ba-cell.empty {
+        background: repeating-linear-gradient(
+          45deg,
+          #f7f3ed,
+          #f7f3ed 10px,
+          #eee7dd 10px,
+          #eee7dd 20px
+        );
+        color: #8d7d68;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+      }
+      body.plain .ba-cell {
+        box-shadow: none;
+      }
+      body.plain .ba-cell.empty {
+        background: #fff;
+      }
+      @media (max-width: 740px) {
+        .ba-block:before {
+          display: none;
+        }
+        .ba-grid {
+          gap: 14px 16px;
+        }
+        .ba-cell {
+          height: 150px;
+        }
+      }
+      @media print {
+        .ba-cell {
+          page-break-inside: avoid;
+          break-inside: avoid;
+        }
+      }
+
+      /* ===== METRICS / IMPACT / REST SAME AS PREV VERSION (trimmed for brevity) ===== */
+      .metrics-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border: 3px solid var(--gold);
+        font: 600 0.62rem "Inter";
+        margin: 0 auto 30px;
+        max-width: 880px;
+      }
+      .metrics-table th {
+        background: #f5efe2;
+        font: 800 0.55rem "Inter";
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 8px 6px;
+        border: 1.6px solid var(--gold);
+        color: #202020;
+      }
+      body.plain .metrics-table th {
+        background: #fff;
+      }
+      .metrics-table td {
+        border: 1.6px solid var(--gold);
+        padding: 6px 6px;
+        text-align: center;
+        background: #fff;
+        font-weight: 600;
+        vertical-align: middle;
+      }
+      .metrics-table td.metric {
+        text-align: left;
+        font-weight: 700;
+        color: #161616;
+        white-space: nowrap;
+      }
+      .mini-bar-wrap {
+        position: relative;
+        height: 14px;
+        background: #eee;
+        border: 1px solid #d3ccbe;
+        border-radius: 12px;
+        overflow: hidden;
+        width: 120px;
+        margin: 0 auto;
+      }
+      .mini-before,
+      .mini-after,
+      .mini-regress {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+      }
+      .mini-before {
+        background: var(--bar-before);
+      }
+      .mini-after {
+        background: var(--bar-improve);
+        mix-blend-mode: multiply;
+      }
+      .mini-regress {
+        background: var(--bar-regress);
+        opacity: 0.85;
+      }
+      .impact-section {
+        max-width: 880px;
+        margin: 0 auto 42px;
+        background: #fff;
+        border: 2px solid var(--gold);
+        border-radius: 20px;
+        padding: 20px 22px 24px;
+      }
+      body.plain .impact-section {
+        border: 1px solid #000;
+      }
+      .impact-title {
+        font: 800 0.75rem "Inter";
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        text-align: center;
+        margin: 0 0 14px;
+        color: #222;
+      }
+      .impact-row {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin: 8px 0 10px;
+      }
+      .impact-label {
+        font: 600 0.58rem "Inter";
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #333;
+        display: flex;
+        justify-content: space-between;
+      }
+      .bar-dual {
+        position: relative;
+        height: 20px;
+        background: #f1eee9;
+        border: 1px solid #d7d0c4;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .bar-dual .seg-before,
+      .bar-dual .seg-after,
+      .bar-dual .seg-regress {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+      }
+      .bar-dual .seg-before {
+        background: var(--bar-before);
+      }
+      .bar-dual .seg-after {
+        background: var(--bar-improve);
+      }
+      .bar-dual .seg-regress {
+        background: var(--bar-regress);
+      }
+      .impact-badge-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 6px;
+      }
+      .impact-badge {
+        background: var(--accent-bg);
+        border: 1px solid var(--gold);
+        padding: 8px 14px 9px;
+        font: 700 0.58rem "Inter";
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        border-radius: 50px;
+        color: #222;
+      }
+      .transform-summary {
+        max-width: 880px;
+        margin: 0 auto 30px;
+        text-align: center;
+      }
+      .big-score {
+        display: inline-block;
+        background: #fff;
+        border: 3px solid var(--gold);
+        padding: 18px 26px 20px;
+        border-radius: 26px;
+        font: 800 1.35rem "Playfair Display";
+        letter-spacing: 0.6px;
+        color: #222;
+        min-width: 140px;
+      }
+      .score-sub {
+        font: 600 0.56rem "Inter";
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-top: 10px;
+        color: #444;
+      }
+      .top-gains {
+        margin-top: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+      .gain-pill {
+        background: #f6f2e8;
+        border: 1px solid var(--gold);
+        padding: 6px 12px 7px;
+        border-radius: 40px;
+        font: 600 0.55rem "Inter";
+        letter-spacing: 0.12em;
+      }
+      .notes-block {
+        background: #fff;
+        border: 1px solid #eadfca;
+        border-radius: 16px;
+        padding: 18px 22px 20px;
+        max-width: 880px;
+        margin: 0 auto 34px;
+      }
+      .notes-block h5 {
+        margin: 0 0 10px;
+        font: 700 0.6rem "Inter";
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #2a2b2d;
+      }
+      .notes-block ul {
+        margin: 0;
+        padding-left: 20px;
+        font: 600 0.68rem/1.5 "Inter";
+        color: #1d1e1f;
+      }
+      .care-table-wrap {
+        max-width: 880px;
+        margin: 0 auto 40px;
+      }
+      .care-table-title {
+        text-align: center;
+        font: 700 0.64rem "Inter";
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        margin: 0 0 10px;
+        color: #2d2f31;
+      }
+      .care-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border: 2px solid var(--gold);
+        font: 600 0.58rem "Inter";
+      }
+      .care-table th {
+        background: #f5efe2;
+        border: 1.2px solid var(--gold);
+        padding: 8px 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font: 800 0.54rem "Inter";
+        color: #202020;
+      }
+      .care-table td {
+        border: 1.2px solid var(--gold);
+        padding: 7px 6px;
+        font: 600 0.58rem "Inter";
+        color: #151515;
+      }
+      .disclaimer {
+        max-width: 840px;
+        margin: 18px auto 14px;
+        font: 600 0.52rem/1.38 "Inter";
+        letter-spacing: 0.06em;
+        text-align: center;
+        color: #575a5e;
+      }
+      .footer-line {
+        text-align: center;
+        font: 700 0.52rem "Inter";
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #3a3d3d;
+        margin-top: 26px;
+      }
+      .status-panel {
+        position: fixed;
+        left: 12px;
+        bottom: 12px;
+        background: #111;
+        color: #fff;
+        font: 600 0.55rem "Inter";
+        padding: 8px 10px;
+        border-radius: 10px;
+        max-width: 260px;
+        z-index: 9999;
+        line-height: 1.3;
+        box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.4);
+      }
+      .status-panel button {
+        all: unset;
+        display: inline-block;
+        background: #444;
+        color: #fff;
+        padding: 3px 6px;
+        margin: 4px 4px 0 0;
+        border-radius: 5px;
+        font: 600 0.55rem "Inter";
+        cursor: pointer;
+      }
+      .status-panel button:hover {
+        background: #666;
+      }
+      .logo-drop-zone {
+        border: 2px dashed #c7b79e;
+        background: #faf7f2;
+        padding: 18px 16px;
+        border-radius: 16px;
+        text-align: center;
+        cursor: pointer;
+        font: 600 0.66rem "Inter";
+        letter-spacing: 0.08em;
+        color: #715d37;
+        transition: 0.25s border-color, 0.25s background;
+      }
+      .logo-drop-zone.dragover {
+        background: #f0e8dc;
+        border-color: var(--gold);
+      }
+      .logo-drop-zone small {
+        display: block;
+        margin-top: 6px;
+        font: 500 0.55rem "Inter";
+        opacity: 0.8;
+      }
+      .avoid-break {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      @media print {
+        #dataForm,
+        form,
+        fieldset,
+        legend,
+        .actions,
+        input,
+        select,
+        textarea,
+        .status-panel,
+        .status-panel * {
+          display: none !important;
+          visibility: hidden !important;
+        }
+        .wrap {
+          grid-template-columns: 1fr !important;
+          padding: 0 !important;
+        }
+        .cert-shell {
+          border: 3px solid var(--gold) !important;
+          box-shadow: none !important;
+          margin: 0 !important;
+          padding: 40px 50px 56px !important;
+        }
+        .ba-block {
+          page-break-inside: avoid;
+          break-inside: avoid;
+        }
+        .impact-section,
+        .transform-summary,
+        .notes-block,
+        .care-table-wrap,
+        .info-grid,
+        .logo-wrap,
+        .date-bar,
+        .gen-line {
+          page-break-inside: avoid;
+          break-inside: avoid;
+        }
+        .metrics-table thead {
+          display: table-header-group;
+        }
+        .metrics-table tfoot {
+          display: table-footer-group;
+        }
+        body {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+          background: #fff !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- FORM (unchanged from 16.7.1 except version text) -->
+      <form id="dataForm" autocomplete="off">
+        <fieldset>
+          <legend>Header Logo</legend>
+          <div id="logoDropZone" class="logo-drop-zone">
+            Drop Logo Here or Click to Upload
+            <small>PNG / JPG • Transparent PNG preferred • Auto embeds</small>
+          </div>
+          <input
+            id="headerLogoFile"
+            type="file"
+            accept="image/*"
+            style="display: none"
+          />
+        </fieldset>
+        <fieldset>
+          <legend>Customer</legend>
+          <label>Customer Name<input id="custName" type="text" /></label>
+          <div class="row">
+            <label>Mobile<input id="custMobile" type="text" /></label>
+            <label>Email<input id="custEmail" type="text" /></label>
+          </div>
+          <label>Address<textarea id="custAddress"></textarea></label>
+        </fieldset>
+        <fieldset>
+          <legend>Article</legend>
+          <div class="row">
+            <label
+              >Article
+              <select id="articleNameSelect">
+                <option value="">Select</option>
+                <option>Sneakers</option>
+                <option>Handbags</option>
+                <option>Belts</option>
+                <option>Wallets</option>
+                <option>Jackets</option>
+                <option>Boots</option>
+                <option>Luggage</option>
+                <option>Accessories</option>
+                <option value="__CUSTOM__">Other (Custom)</option>
+              </select>
+            </label>
+            <label
+              >Custom Article<input
+                id="articleNameCustom"
+                type="text"
+                style="display: none"
+                placeholder="Type custom"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >Brand
+              <input
+                id="articleBrand"
+                type="text"
+                list="brandList"
+                placeholder="Search brand"
+              />
+              <datalist id="brandList">
+                <option>Nike</option>
+                <option>Adidas</option>
+                <option>Jordan</option>
+                <option>Air Jordan</option>
+                <option>New Balance</option>
+                <option>Puma</option>
+                <option>Reebok</option>
+                <option>Asics</option>
+                <option>Saucony</option>
+                <option>Converse</option>
+                <option>Vans</option>
+                <option>Under Armour</option>
+                <option>Yeezy</option>
+                <option>Balenciaga</option>
+                <option>Off-White</option>
+                <option>Fear of God</option>
+                <option>Hoka</option>
+                <option>On</option>
+                <option>Salomon</option>
+                <option>Veja</option>
+                <option>Alexander McQueen</option>
+                <option>Common Projects</option>
+                <option>Diadora</option>
+                <option>Li-Ning</option>
+                <option>Mizuno</option>
+                <option>K-Swiss</option>
+                <option>Louis Vuitton</option>
+                <option>Gucci</option>
+                <option>Chanel</option>
+                <option>Hermès</option>
+                <option>Prada</option>
+                <option>Dior</option>
+                <option>Fendi</option>
+                <option>Bottega Veneta</option>
+                <option>Saint Laurent</option>
+                <option>Celine</option>
+                <option>Givenchy</option>
+                <option>Burberry</option>
+                <option>Coach</option>
+                <option>Michael Kors</option>
+                <option>Kate Spade</option>
+                <option>Tory Burch</option>
+                <option>Loewe</option>
+                <option>Miu Miu</option>
+                <option>Goyard</option>
+                <option>Mulberry</option>
+                <option>Longchamp</option>
+                <option>Valentino</option>
+                <option>Versace</option>
+                <option>Rimowa</option>
+                <option>Tumi</option>
+                <option>Salvatore Ferragamo</option>
+                <option>Marc Jacobs</option>
+                <option>Balmain</option>
+                <option>JW Anderson</option>
+                <option>Kenzo</option>
+                <option>Issey Miyake</option>
+                <option>Moncler</option>
+                <option>Stone Island</option>
+                <option>Hugo Boss</option>
+                <option>Armani</option>
+                <option>Tom Ford</option>
+                <option>Brunello Cucinelli</option>
+                <option>Dsquared2</option>
+                <option>Dr. Martens</option>
+                <option>Timberland</option>
+                <option>UGG</option>
+                <option>The North Face</option>
+              </datalist>
+            </label>
+            <label>Model<input id="articleModel" type="text" /></label>
+          </div>
+          <div class="row">
+            <label>Serial / Code<input id="articleSerial" type="text" /></label>
+            <label
+              >Service
+              <input
+                id="service"
+                type="text"
+                list="serviceList"
+                placeholder="Search service"
+              />
+              <datalist id="serviceList">
+                <option>Full Restore</option>
+                <option>Premium Restoration</option>
+                <option>Deep Clean</option>
+                <option>Premium Clean</option>
+                <option>Express Clean</option>
+                <option>De-yellowing</option>
+                <option>Midsole Repaint</option>
+                <option>Recoloring</option>
+                <option>Custom Dye</option>
+                <option>Patina Restoration</option>
+                <option>Color Touch-Up</option>
+                <option>Panel Replacement</option>
+                <option>Sole Swap</option>
+                <option>Sole Reglue</option>
+                <option>Deoxidation</option>
+                <option>Scratch Repair</option>
+                <option>Scuff Removal</option>
+                <option>Stain Extraction</option>
+                <option>Edge Repair</option>
+                <option>Stitch Repair</option>
+                <option>Stitch Reinforcement</option>
+                <option>Handle Reinforcement</option>
+                <option>Strap Repair</option>
+                <option>Hardware Polish</option>
+                <option>Hardware Replacement</option>
+                <option>Zipper Replacement</option>
+                <option>Lining Replacement</option>
+                <option>Structural Reinforcement</option>
+                <option>Conditioning</option>
+                <option>Leather Hydration</option>
+                <option>Protective Coating</option>
+                <option>Waterproofing</option>
+                <option>Odor Neutralisation</option>
+                <option>Mold Treatment</option>
+                <option>Sanitization</option>
+                <option>Refresh & Sanitize</option>
+                <option>Wrinkle Reduction</option>
+                <option>Stretch Correction</option>
+                <option>De-pilling</option>
+                <option>Finishing & Polish</option>
+              </datalist>
+            </label>
+          </div>
+          <div class="row">
+            <label>Technician<input id="tech" type="text" /></label>
+            <label
+              >Cond. Before<input
+                id="condBefore"
+                type="text"
+                placeholder="Fair"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >Cond. After<input
+                id="condAfter"
+                type="text"
+                placeholder="Very Good"
+            /></label>
+            <label
+              >Improvement % (override)<input
+                id="improvePct"
+                type="text"
+                placeholder="Auto"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >Handle / Tag<input
+                id="handle"
+                type="text"
+                placeholder="@restoree_in"
+            /></label>
+            <label
+              >Verification URL<input
+                id="verifyUrl"
+                type="text"
+                placeholder="restoree.in/AB12"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >Referral Code<input
+                id="refCode"
+                type="text"
+                placeholder="SHARE10"
+            /></label>
+            <label
+              >ID (auto)<input
+                id="idField"
+                type="text"
+                readonly
+                style="background: #f4f1eb"
+            /></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Timeline / Warranty</legend>
+          <div class="row">
+            <label>Picked Up<input id="datePicked" type="date" /></label>
+            <label>Completed<input id="dateCompleted" type="date" /></label>
+          </div>
+          <div class="row">
+            <label>Delivered<input id="dateDelivered" type="date" /></label>
+            <label
+              >Warranty Expiry<input id="warrantyExpiry" type="date"
+            /></label>
+          </div>
+          <div class="row">
+            <label>Next Care Date<input id="nextCare" type="date" /></label>
+            <label></label>
+          </div>
+          <div class="micro">
+            Transformation Score = average progress toward 10 (0–100%).
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Metrics (1–10)</legend>
+          <div class="row">
+            <label
+              >Color Before<input id="mColorB" type="text" placeholder="5"
+            /></label>
+            <label
+              >Color After<input id="mColorA" type="text" placeholder="8"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >Structure Before<input id="mStructB" type="text" placeholder="5"
+            /></label>
+            <label
+              >Structure After<input id="mStructA" type="text" placeholder="9"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >Hardware Before<input id="mHardB" type="text" placeholder="4"
+            /></label>
+            <label
+              >Hardware After<input id="mHardA" type="text" placeholder="8"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >Cleanliness Before<input
+                id="mCleanB"
+                type="text"
+                placeholder="4"
+            /></label>
+            <label
+              >Cleanliness After<input id="mCleanA" type="text" placeholder="9"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >Odor Before<input id="mOdorB" type="text" placeholder="3"
+            /></label>
+            <label
+              >Odor After<input id="mOdorA" type="text" placeholder="9"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >Overall Before<input
+                id="mOverallB"
+                type="text"
+                readonly
+                style="background: #f4f1eb"
+            /></label>
+            <label
+              >Overall After<input
+                id="mOverallA"
+                type="text"
+                readonly
+                style="background: #f4f1eb"
+            /></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Arrival Issues</legend>
+          <div id="arrivalList" class="tag-grid"></div>
+          <div class="add-line">
+            <input id="arrivalAdd" type="text" placeholder="Add custom" />
+            <button type="button" class="secondary" id="arrivalAddBtn">
+              Add
+            </button>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Work Done</legend>
+          <div id="workList" class="tag-grid"></div>
+          <div class="add-line">
+            <input id="workAdd" type="text" placeholder="Add custom" />
+            <button type="button" class="secondary" id="workAddBtn">Add</button>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Care Essentials</legend>
+          <div id="careList" class="tag-grid"></div>
+          <div class="add-line">
+            <input id="careAdd" type="text" placeholder="Add custom" />
+            <button type="button" class="secondary" id="careAddBtn">Add</button>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Images</legend>
+          <div class="row">
+            <label
+              >Before 1<input id="before1" type="file" accept="image/*"
+            /></label>
+            <label
+              >Before 2<input id="before2" type="file" accept="image/*"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >Before 3<input id="before3" type="file" accept="image/*"
+            /></label>
+            <label
+              >Before 4<input id="before4" type="file" accept="image/*"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >After 1<input id="after1" type="file" accept="image/*"
+            /></label>
+            <label
+              >After 2<input id="after2" type="file" accept="image/*"
+            /></label>
+          </div>
+          <div class="row">
+            <label
+              >After 3<input id="after3" type="file" accept="image/*"
+            /></label>
+            <label
+              >After 4<input id="after4" type="file" accept="image/*"
+            /></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Disclaimer</legend>
+          <label
+            >Text<textarea
+              id="disclaimerTxt"
+              placeholder="This certificate documents restorative work performed. Cosmetic enhancement does not imply manufacturer endorsement."
+            ></textarea>
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Logo (Advanced)</legend>
+          <label
+            >Logo URL
+            <input id="logoUrl" type="text" value="" />
+          </label>
+          <label
+            >Upload Logo<input id="logoFile" type="file" accept="image/*"
+          /></label>
+          <label
+            >Base64 (fallback)<textarea
+              id="logoBase64"
+              placeholder="data:image/png;base64,..."
+            ></textarea>
+          </label>
+          <div class="actions" style="margin-top: 4px">
+            <button type="button" class="secondary" id="applyUrlBtn">
+              Apply URL
+            </button>
+            <button type="button" class="secondary" id="embedBtn">
+              Embed / Freeze Logo
+            </button>
+            <button type="button" class="secondary" id="useBase64Btn">
+              Use Base64
+            </button>
+            <button type="button" class="secondary" id="resetLogoBtn">
+              Reset
+            </button>
+            <button type="button" class="secondary" id="plainToggleBtn">
+              Plain Mode
+            </button>
+            <button type="button" class="secondary" id="printFitBtn">
+              Print Fit Toggle
+            </button>
+          </div>
+          <div class="micro" id="logoStatus"></div>
+        </fieldset>
+        <div class="actions">
+          <button type="button" id="updateBtn">Update</button>
+          <button type="button" class="secondary" id="printCertOnlyBtn">
+            Print Certificate Only
+          </button>
+          <button type="button" class="secondary" id="publishPDF">
+            Print / Full Page PDF
+          </button>
+          <button type="button" class="secondary" id="flatPDFBtn">
+            Flat Image PDF
+          </button>
+          <button type="button" class="secondary" id="pngExportBtn">
+            Export PNG
+          </button>
+          <button type="button" class="secondary" id="testMetricsBtn">
+            Test Metrics Fill
+          </button>
+          <button type="button" class="secondary" id="clearStateBtn">
+            Hard Refresh State
+          </button>
+        </div>
+      </form>
+
+      <!-- CERTIFICATE -->
+      <div class="cert-shell" id="certificate">
+        <div class="logo-wrap avoid-break">
+          <img id="certLogo" class="cert-logo" alt="Logo" />
+          <div id="logoFallback" class="logo-fallback">RESTOREE</div>
+        </div>
+        <h2 class="cert-title avoid-break">Restoration Certificate</h2>
+        <div class="date-bar avoid-break">
+          <span>Picked <strong id="ctDatePicked">—</strong></span>
+          <span>Completed <strong id="ctDateCompleted">—</strong></span>
+          <span>Delivered <strong id="ctDateDelivered">—</strong></span>
+          <span>ID <strong id="ctID">—</strong></span>
+        </div>
+        <div class="gen-line avoid-break">
+          Generated <span id="genTime">—</span>
+        </div>
+
+        <div class="section-head avoid-break">Customer</div>
+        <div class="info-grid avoid-break">
+          <div class="info-box">
+            <div class="lbl">Customer</div>
+            <div class="val" id="ctCustName">—</div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Mobile</div>
+            <div class="val" id="ctCustMobile">—</div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Email</div>
+            <div class="val" id="ctCustEmail">—</div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Address</div>
+            <div class="val" id="ctCustAddress">—</div>
+          </div>
+        </div>
+
+        <div class="section-head avoid-break">Article</div>
+        <div class="info-grid avoid-break">
+          <div class="info-box">
+            <div class="lbl">Article</div>
+            <div class="val" id="ctArticleName">—</div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Brand</div>
+            <div class="val" id="ctArticleBrand">—</div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Model</div>
+            <div class="val" id="ctArticleModel">—</div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Serial</div>
+            <div class="val" id="ctArticleSerial">—</div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Service</div>
+            <div class="val" id="ctService">—</div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Technician</div>
+            <div class="val" id="ctTech">—</div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Warranty</div>
+            <div class="val" id="ctWarranty">—</div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Next Care</div>
+            <div class="val" id="ctNextCare">—</div>
+          </div>
+        </div>
+
+        <!-- NEW ALIGNED BEFORE / AFTER BLOCK -->
+        <div class="ba-block avoid-break" id="baBlock">
+          <div class="ba-headers">
+            <div class="ba-head">Before</div>
+            <div class="ba-head">After</div>
+          </div>
+          <div class="ba-grid" id="baGrid"></div>
+        </div>
+
+        <div class="section-head avoid-break">Condition Metrics</div>
+        <table class="metrics-table avoid-break">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Before</th>
+              <th>After</th>
+              <th>Δ (Pct)</th>
+              <th>Bar</th>
+            </tr>
+          </thead>
+          <tbody id="metricsBody"></tbody>
+          <tfoot>
+            <tr>
+              <td class="metric" colspan="2">Overall Progress</td>
+              <td id="overallScoreCell" style="font-weight: 700">—</td>
+              <td id="overallDeltaCell">—</td>
+              <td>
+                <div class="mini-bar-wrap" id="overallBar">
+                  <div class="mini-before" id="overallBeforeSeg"></div>
+                  <div class="mini-after" id="overallAfterSeg"></div>
+                  <div class="mini-regress" id="overallRegressSeg"></div>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div class="transform-summary avoid-break">
+          <div class="big-score" id="bigScore">—</div>
+          <div class="score-sub">Transformation Score</div>
+          <div class="top-gains" id="topGains"></div>
+        </div>
+
+        <div class="impact-section avoid-break">
+          <div class="impact-title">Restoration Impact</div>
+          <div id="impactRows"></div>
+          <div class="impact-badge-wrap" id="impactBadges"></div>
+        </div>
+
+        <div
+          id="arrivalBlock"
+          class="notes-block avoid-break"
+          style="display: none"
+        >
+          <h5>Arrival Condition</h5>
+          <ul id="arrivalUL"></ul>
+        </div>
+        <div
+          id="workBlock"
+          class="notes-block avoid-break"
+          style="display: none"
+        >
+          <h5>Work Performed</h5>
+          <ul id="workUL"></ul>
+        </div>
+
+        <div
+          id="careTableWrap"
+          class="care-table-wrap avoid-break"
+          style="display: none"
+        >
+          <div class="care-table-title">Care Plan</div>
+          <table class="care-table" id="careTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Care Action</th>
+              </tr>
+            </thead>
+            <tbody id="careTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="info-grid avoid-break" style="margin-top: 14px">
+          <div class="info-box">
+            <div class="lbl">Handle</div>
+            <div class="val" id="ctHandle">—</div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Verification</div>
+            <div class="val">
+              <a id="ctVerify" href="#" target="_blank">—</a>
+            </div>
+          </div>
+          <div class="info-box">
+            <div class="lbl">Referral</div>
+            <div class="val" id="ctRef">—</div>
+          </div>
+        </div>
+
+        <div class="disclaimer avoid-break" id="ctDisclaimer"></div>
+        <div class="footer-line avoid-break">
+          RÉSTORÉE • AUTHENTIC RESTORATION • CARE • SHARE
+        </div>
+      </div>
+    </div>
+
+    <div class="status-panel" id="statusPanel">
+      v16.7.2
+      <div id="statusLog"></div>
+      <div style="margin-top: 4px">
+        <button id="forceEmbedBtn"></button>
+        <button id="showStateBtn"></button>
+      </div>
+    </div>
+    <canvas
+      id="hiddenCanvas"
+      width="1200"
+      height="600"
+      style="display: none"
+    ></canvas>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const $ = (id) => document.getElementById(id);
+        const log = (msg) => {
+          const area = $("statusLog");
+          if (!area) return;
+          const line = document.createElement("div");
+          // line.textContent=new Date().toLocaleTimeString()+': '+msg;
+          area.prepend(line);
+        };
+        window.onerror = (m) => log("ERR: " + m);
+
+        function fmtDate(v) {
+          if (!v) return "—";
+          const d = new Date(v);
+          if (isNaN(d)) return "—";
+          return d
+            .toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })
+            .replace(/ /g, " ");
+        }
+        function genID() {
+          return (
+            "RST-" +
+            Math.random().toString(36).slice(2, 6).toUpperCase() +
+            "-" +
+            Date.now().toString().slice(-4)
+          );
+        }
+        function setVal(id, val, ph = "—") {
+          const el = $(id);
+          if (el) el.textContent = val ? val : ph;
+        }
+        function safeLink(id, url) {
+          const el = $(id);
+          if (!el) return;
+          if (url) {
+            el.textContent = url;
+            el.href =
+              (url.startsWith("http") ? "" : "https://") +
+              url.replace(/^https?:\/\//, "");
+          } else {
+            el.textContent = "—";
+            el.removeAttribute("href");
+          }
+        }
+
+        const ARRIVAL_BASE = [
+          "Color fading",
+          "Scuffs / scratches",
+          "Edge wear",
+          "Hardware tarnish",
+          "Loss of structure",
+          "Ink transfer",
+          "Water marks",
+          "Oil stains",
+          "Odor",
+          "Interior dirt",
+          "Cracking leather",
+        ];
+        const WORK_BASE = [
+          "Deep clean",
+          "Edge repair",
+          "Color touch-up",
+          "Conditioning",
+          "Hardware polish",
+          "Odor neutralisation",
+          "Stitch reinforcement",
+          "Protective coating",
+          "Finish refinement",
+        ];
+        const CARE_BASE = [
+          "Keep dry 48h",
+          "Store upright",
+          "Avoid sunlight",
+          "Use dust bag",
+          "Wipe after use",
+          "Condition 6 months",
+          "Avoid overloading",
+        ];
+
+        const STORAGE_KEY = "restoree_v16_7_2_state";
+        let certID = "";
+        let embeddedLogo = null;
+        const beforeImgs = {},
+          afterImgs = {};
+
+        function renderList(base, id) {
+          const h = $(id);
+          h.innerHTML = "";
+          base.forEach((item) => {
+            const lab = document.createElement("label");
+            lab.className = "tag-item";
+            const chk = document.createElement("input");
+            chk.type = "checkbox";
+            chk.value = item;
+            chk.addEventListener("change", () => {
+              update();
+              persist();
+            });
+            const span = document.createElement("span");
+            span.textContent = item;
+            lab.append(chk, span);
+            h.append(lab);
+          });
+        }
+        renderList(ARRIVAL_BASE, "arrivalList");
+        renderList(WORK_BASE, "workList");
+        renderList(CARE_BASE, "careList");
+
+        function addCustom(inputId, listId) {
+          const v = $(inputId).value.trim();
+          if (!v) return;
+          const lab = document.createElement("label");
+          lab.className = "tag-item";
+          const chk = document.createElement("input");
+          chk.type = "checkbox";
+          chk.value = v;
+          chk.checked = true;
+          chk.addEventListener("change", () => {
+            update();
+            persist();
+          });
+          const span = document.createElement("span");
+          span.textContent = v;
+          lab.append(chk, span);
+          $(listId).append(lab);
+          $(inputId).value = "";
+          update();
+          persist();
+        }
+        $("arrivalAddBtn").addEventListener("click", () =>
+          addCustom("arrivalAdd", "arrivalList")
+        );
+        $("workAddBtn").addEventListener("click", () =>
+          addCustom("workAdd", "workList")
+        );
+        $("careAddBtn").addEventListener("click", () =>
+          addCustom("careAdd", "careList")
+        );
+        ["arrivalAdd", "workAdd", "careAdd"].forEach((id) => {
+          $(id).addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              const map = {
+                arrivalAdd: "arrivalList",
+                workAdd: "workList",
+                careAdd: "careList",
+              };
+              addCustom(id, map[id]);
+            }
+          });
+        });
+
+        const METRICS = [
+          { key: "Color", b: "mColorB", a: "mColorA" },
+          { key: "Structure", b: "mStructB", a: "mStructA" },
+          { key: "Hardware", b: "mHardB", a: "mHardA" },
+          { key: "Cleanliness", b: "mCleanB", a: "mCleanA" },
+          { key: "Odor", b: "mOdorB", a: "mOdorA" },
+          { key: "Overall", b: "mOverallB", a: "mOverallA", computed: true },
+        ];
+        function parseNum(id) {
+          const raw = $(id)?.value || "";
+          const v = parseFloat(raw.replace(/[^0-9.]/g, ""));
+          return isNaN(v) ? null : v;
+        }
+        function clamp10(v) {
+          if (v == null) return null;
+          return Math.min(10, Math.max(0, v));
+        }
+        function autoOverall() {
+          const before = METRICS.filter((m) => !m.computed)
+            .map((m) => clamp10(parseNum(m.b)))
+            .filter((v) => v != null);
+          const after = METRICS.filter((m) => !m.computed)
+            .map((m) => clamp10(parseNum(m.a)))
+            .filter((v) => v != null);
+          const avg = (a) =>
+            a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+          const ob = avg(before),
+            oa = avg(after);
+          $("mOverallB").value =
+            ob != null ? ob.toFixed(1).replace(/\.0$/, "") : "";
+          $("mOverallA").value =
+            oa != null ? oa.toFixed(1).replace(/\.0$/, "") : "";
+        }
+        METRICS.filter((m) => !m.computed).forEach((m) => {
+          [m.b, m.a].forEach((id) =>
+            $(id).addEventListener("input", () => {
+              autoOverall();
+              update();
+              persist();
+            })
+          );
+        });
+
+        function buildMiniBar(vb, va) {
+          const wrap = document.createElement("div");
+          wrap.className = "mini-bar-wrap";
+          const bSeg = document.createElement("div");
+          bSeg.className = "mini-before";
+          const aSeg = document.createElement("div");
+          aSeg.className = "mini-after";
+          const rSeg = document.createElement("div");
+          rSeg.className = "mini-regress";
+          if (vb != null) bSeg.style.width = (vb / 10) * 100 + "%";
+          if (vb != null && va != null) {
+            if (va >= vb) {
+              aSeg.style.left = (vb / 10) * 100 + "%";
+              aSeg.style.width = ((va - vb) / 10) * 100 + "%";
+            } else {
+              rSeg.style.left = (va / 10) * 100 + "%";
+              rSeg.style.width = ((vb - va) / 10) * 100 + "%";
+              bSeg.style.width = (va / 10) * 100 + "%";
+            }
+          }
+          wrap.append(bSeg, aSeg, rSeg);
+          return wrap;
+        }
+
+        function buildMetricsTable() {
+          const tbody = $("metricsBody");
+          tbody.innerHTML = "";
+          METRICS.forEach((m) => {
+            if (m.computed) return;
+            const vb = clamp10(parseNum(m.b));
+            const va = clamp10(parseNum(m.a));
+            const delta = vb != null && va != null ? va - vb : null;
+            let pct = null;
+            if (vb != null && va != null && vb > 0)
+              pct = ((va - vb) / vb) * 100;
+            const capped =
+              pct != null ? Math.min(100, Math.max(-100, pct)) : null;
+            const tr = document.createElement("tr");
+            const barCell = document.createElement("td");
+            barCell.appendChild(buildMiniBar(vb, va));
+            tr.innerHTML = `<td class="metric">${m.key}</td>
+            <td>${vb != null ? vb : "—"}</td>
+            <td>${va != null ? va : "—"}</td>
+            <td>${
+              delta != null
+                ? (delta > 0 ? "+" : "") +
+                  delta +
+                  (capped != null ? " (" + capped.toFixed(0) + "%)" : "")
+                : "—"
+            }</td>`;
+            tr.appendChild(barCell);
+            tbody.appendChild(tr);
+          });
+          renderOverallRowBar();
+        }
+
+        function renderOverallRowBar() {
+          const ob = parseFloat($("mOverallB").value) || null;
+          const oa = parseFloat($("mOverallA").value) || null;
+          const beforeSeg = $("overallBeforeSeg");
+          const afterSeg = $("overallAfterSeg");
+          const regressSeg = $("overallRegressSeg");
+          beforeSeg.style.width = "0%";
+          afterSeg.style.width = "0%";
+          regressSeg.style.width = "0%";
+          if (ob != null) beforeSeg.style.width = (ob / 10) * 100 + "%";
+          if (ob != null && oa != null) {
+            if (oa >= ob) {
+              afterSeg.style.left = (ob / 10) * 100 + "%";
+              afterSeg.style.width = ((oa - ob) / 10) * 100 + "%";
+              regressSeg.style.width = "0%";
+            } else {
+              regressSeg.style.left = (oa / 10) * 100 + "%";
+              regressSeg.style.width = ((ob - oa) / 10) * 100 + "%";
+              beforeSeg.style.width = (oa / 10) * 100 + "%";
+              afterSeg.style.width = "0%";
+            }
+          }
+          const deltaCell = $("overallDeltaCell");
+          const scoreCell = $("overallScoreCell");
+          let delta = null;
+          let pct = null;
+          if (ob != null && oa != null) {
+            delta = oa - ob;
+            if (ob > 0) pct = (delta / ob) * 100;
+          }
+          scoreCell.textContent =
+            oa != null ? oa.toFixed(1).replace(/\.0$/, "") : "—";
+          deltaCell.textContent =
+            delta != null
+              ? (delta > 0 ? "+" : "") +
+                delta +
+                (pct != null
+                  ? " (" + Math.min(100, Math.max(-100, pct)).toFixed(0) + "%)"
+                  : "")
+              : "—";
+        }
+
+        function renderImpactBars() {
+          const wrap = $("impactRows");
+          wrap.innerHTML = "";
+          const deltas = [];
+          METRICS.filter((m) => !m.computed).forEach((m) => {
+            const vb = clamp10(parseNum(m.b));
+            const va = clamp10(parseNum(m.a));
+            if (vb == null && va == null) return;
+            let pctGain = null;
+            if (vb != null && va != null && vb > 0)
+              pctGain = ((va - vb) / vb) * 100;
+            const capped =
+              pctGain != null ? Math.min(100, Math.max(-100, pctGain)) : null;
+            deltas.push({ k: m.key, b: vb, a: va, g: capped });
+            const row = document.createElement("div");
+            row.className = "impact-row";
+            const label = document.createElement("div");
+            label.className = "impact-label";
+            label.innerHTML = `<span>${m.key}</span><span>${
+              vb != null ? vb : "—"
+            } → ${va != null ? va : "—"}${
+              capped != null ? " (" + capped.toFixed(0) + "%)" : ""
+            }</span>`;
+            const bar = document.createElement("div");
+            bar.className = "bar-dual";
+            const bSeg = document.createElement("div");
+            bSeg.className = "seg-before";
+            const aSeg = document.createElement("div");
+            aSeg.className = "seg-after";
+            const rSeg = document.createElement("div");
+            rSeg.className = "seg-regress";
+            if (vb != null) bSeg.style.width = (vb / 10) * 100 + "%";
+            if (vb != null && va != null) {
+              if (va >= vb) {
+                aSeg.style.left = (vb / 10) * 100 + "%";
+                aSeg.style.width = ((va - vb) / 10) * 100 + "%";
+              } else {
+                rSeg.style.left = (va / 10) * 100 + "%";
+                rSeg.style.width = ((vb - va) / 10) * 100 + "%";
+                bSeg.style.width = (va / 10) * 100 + "%";
+              }
+            }
+            bar.append(bSeg, aSeg, rSeg);
+            row.append(label, bar);
+            wrap.append(row);
+          });
+          const badges = $("impactBadges");
+          badges.innerHTML = "";
+          deltas
+            .filter((d) => d.g != null && d.g > 0)
+            .sort((a, b) => b.g - a.g)
+            .slice(0, 3)
+            .forEach((d) => {
+              const b = document.createElement("div");
+              b.className = "impact-badge";
+              b.textContent = `${d.k} +${d.g.toFixed(0)}%`;
+              badges.append(b);
+            });
+        }
+
+        function computeTransformationScore() {
+          const progresses = [];
+          METRICS.filter((m) => !m.computed).forEach((m) => {
+            const vb = clamp10(parseNum(m.b)),
+              va = clamp10(parseNum(m.a));
+            if (vb != null && va != null && va > vb && vb < 10) {
+              progresses.push(((va - vb) / (10 - vb)) * 100);
+            }
+          });
+          let score = null;
+          if (progresses.length)
+            score = progresses.reduce((x, y) => x + y, 0) / progresses.length;
+          else {
+            const afterVals = METRICS.filter((m) => !m.computed)
+              .map((m) => clamp10(parseNum(m.a)))
+              .filter((v) => v != null);
+            if (afterVals.length)
+              score =
+                (afterVals.reduce((x, y) => x + y, 0) / afterVals.length / 10) *
+                100;
+          }
+          if (score == null) return null;
+          return Math.min(100, Math.max(0, score));
+        }
+
+        function renderTransformationSummary() {
+          const score = computeTransformationScore();
+          setVal("bigScore", score != null ? score.toFixed(0) + "%" : "—");
+          const gainMetrics = [];
+          METRICS.filter((m) => !m.computed).forEach((m) => {
+            const vb = clamp10(parseNum(m.b)),
+              va = clamp10(parseNum(m.a));
+            if (vb != null && va != null && vb > 0) {
+              let g = ((va - vb) / vb) * 100;
+              g = Math.min(100, Math.max(-100, g));
+              if (g > 0) gainMetrics.push({ k: m.key, g });
+            }
+          });
+          gainMetrics.sort((a, b) => b.g - a.g);
+          const tg = $("topGains");
+          tg.innerHTML = "";
+          gainMetrics.slice(0, 3).forEach((gm) => {
+            const pill = document.createElement("div");
+            pill.className = "gain-pill";
+            pill.textContent = `${gm.k} +${gm.g.toFixed(0)}%`;
+            tg.appendChild(pill);
+          });
+        }
+
+        function loadImg(e, store, key) {
+          const f = e.target.files[0];
+          if (!f) {
+            delete store[key];
+            update();
+            persist();
+            return;
+          }
+          const fr = new FileReader();
+          fr.onload = (ev) => {
+            store[key] = ev.target.result;
+            update();
+            persist();
+          };
+          fr.readAsDataURL(f);
+        }
+        ["before1", "before2", "before3", "before4"].forEach((id) =>
+          $(id).addEventListener("change", (e) => loadImg(e, beforeImgs, id))
+        );
+        ["after1", "after2", "after3", "after4"].forEach((id) =>
+          $(id).addEventListener("change", (e) => loadImg(e, afterImgs, id))
+        );
+
+        function renderBA() {
+          const grid = $("baGrid");
+          if (!grid) return;
+          grid.innerHTML = "";
+          const beforeArray = Object.values(beforeImgs);
+          const afterArray = Object.values(afterImgs);
+          const max = Math.max(beforeArray.length, afterArray.length);
+          for (let i = 0; i < max; i++) {
+            const bCell = document.createElement("div");
+            bCell.className = "ba-cell";
+            if (beforeArray[i]) {
+              const img = document.createElement("img");
+              img.src = beforeArray[i];
+              bCell.appendChild(img);
+            } else {
+              bCell.classList.add("empty");
+              bCell.textContent = "—";
+            }
+            const aCell = document.createElement("div");
+            aCell.className = "ba-cell";
+            if (afterArray[i]) {
+              const img = document.createElement("img");
+              img.src = afterArray[i];
+              aCell.appendChild(img);
+            } else {
+              aCell.classList.add("empty");
+              aCell.textContent = "—";
+            }
+            grid.append(bCell, aCell);
+          }
+        }
+
+        function applyLogo(src) {
+          const logo = $("certLogo"),
+            fallback = $("logoFallback");
+          if (!logo || !fallback) return;
+          if (src) {
+            logo.style.display = "block";
+            fallback.style.display = "none";
+            logo.src = src;
+          } else {
+            logo.style.display = "none";
+            fallback.style.display = "block";
+          }
+        }
+        function flattenLogo(src) {
+          return new Promise((res) => {
+            try {
+              const img = new Image();
+              img.crossOrigin = "anonymous";
+              img.onload = () => {
+                const c = $("hiddenCanvas");
+                c.width = img.naturalWidth;
+                c.height = img.naturalHeight;
+                const ctx = c.getContext("2d");
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, c.width, c.height);
+                ctx.drawImage(img, 0, 0, c.width, c.height);
+                try {
+                  res(c.toDataURL("image/png"));
+                } catch (e) {
+                  res(src);
+                }
+              };
+              img.onerror = () => res(src);
+              img.src = src;
+            } catch (e) {
+              res(src);
+            }
+          });
+        }
+        async function embedFromUrl() {
+          const url = $("logoUrl").value.trim();
+          if (!url) {
+            $("logoStatus").textContent = "No URL";
+            log("Logo: no URL");
+            return;
+          }
+          $("logoStatus").textContent = "Embedding...";
+          try {
+            const resp = await fetch(url, { mode: "cors" });
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            const blob = await resp.blob();
+            const data = await new Promise((res, rej) => {
+              const fr = new FileReader();
+              fr.onload = () => res(fr.result);
+              fr.onerror = () => rej(fr.error);
+              fr.readAsDataURL(blob);
+            });
+            embeddedLogo = await flattenLogo(data);
+            applyLogo(embeddedLogo);
+            $("logoStatus").textContent = "Embedded & cached.";
+            log("Logo embedded OK");
+            persist();
+          } catch (e) {
+            $("logoStatus").textContent = "Embed fail: " + e.message;
+            log("Logo embed failed: " + e.message);
+          }
+        }
+        $("applyUrlBtn").addEventListener("click", () => {
+          const url = $("logoUrl").value.trim();
+          applyLogo(url || null);
+          $("logoStatus").textContent = "URL applied (not embedded).";
+          log("Logo raw URL applied");
+        });
+        $("embedBtn").addEventListener("click", () => embedFromUrl());
+        $("resetLogoBtn").addEventListener("click", () => {
+          embeddedLogo = null;
+          const url = $("logoUrl").value.trim();
+          applyLogo(url || null);
+          $("logoStatus").textContent = "Reset to raw URL.";
+          log("Logo reset");
+          persist();
+        });
+        $("logoFile").addEventListener("change", (e) => {
+          const f = e.target.files[0];
+          if (!f) return;
+          const fr = new FileReader();
+          fr.onload = async (ev) => {
+            embeddedLogo = await flattenLogo(ev.target.result);
+            applyLogo(embeddedLogo);
+            $("logoStatus").textContent = "Embedded from upload.";
+            log("Logo uploaded & embedded");
+            persist();
+          };
+          fr.readAsDataURL(f);
+        });
+        $("useBase64Btn").addEventListener("click", async () => {
+          const b = $("logoBase64").value.trim();
+          if (!b.startsWith("data:image")) {
+            $("logoStatus").textContent = "Invalid base64";
+            log("Logo base64 invalid");
+            return;
+          }
+          embeddedLogo = await flattenLogo(b);
+          applyLogo(embeddedLogo);
+          $("logoStatus").textContent = "Base64 embedded.";
+          log("Logo base64 embedded");
+          persist();
+        });
+        $("forceEmbedBtn").addEventListener("click", () => embedFromUrl());
+
+        const dropZone = $("logoDropZone");
+        const hiddenHeaderFile = $("headerLogoFile");
+        dropZone.addEventListener("click", () => hiddenHeaderFile.click());
+        dropZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          dropZone.classList.add("dragover");
+        });
+        dropZone.addEventListener("dragleave", () =>
+          dropZone.classList.remove("dragover")
+        );
+        dropZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dropZone.classList.remove("dragover");
+          if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleHeaderLogoFile(e.dataTransfer.files[0]);
+          }
+        });
+        hiddenHeaderFile.addEventListener("change", (e) => {
+          const f = e.target.files[0];
+          if (f) handleHeaderLogoFile(f);
+        });
+        function handleHeaderLogoFile(file) {
+          const fr = new FileReader();
+          fr.onload = async (ev) => {
+            embeddedLogo = await flattenLogo(ev.target.result);
+            applyLogo(embeddedLogo);
+            $("logoStatus").textContent = "Header logo embedded (drop).";
+            log("Header logo embedded from drop");
+            persist();
+          };
+          fr.readAsDataURL(file);
+        }
+
+        const articleSelect = $("articleNameSelect");
+        const articleCustom = $("articleNameCustom");
+        articleSelect.addEventListener("change", () => {
+          if (articleSelect.value === "__CUSTOM__")
+            articleCustom.style.display = "";
+          else {
+            articleCustom.style.display = "none";
+            articleCustom.value = "";
+          }
+          update();
+          persist();
+        });
+        articleCustom.addEventListener("input", () => {
+          update();
+          persist();
+        });
+
+        function collectChecked(id) {
+          const root = $(id);
+          if (!root) return [];
+          return Array.from(
+            root.querySelectorAll("input[type=checkbox]:checked")
+          ).map((c) => c.value);
+        }
+
+        function update() {
+          try {
+            if (!certID) certID = genID();
+            setVal("ctID", certID);
+            const idField = $("idField");
+            if (idField) idField.value = certID;
+
+            setVal("ctCustName", $("custName").value.trim());
+            setVal("ctCustMobile", $("custMobile").value.trim());
+            setVal("ctCustEmail", $("custEmail").value.trim());
+            setVal("ctCustAddress", $("custAddress").value.trim());
+
+            let art = articleSelect.value;
+            if (art === "__CUSTOM__") art = articleCustom.value.trim();
+            setVal("ctArticleName", art);
+            setVal("ctArticleBrand", $("articleBrand").value.trim());
+            setVal("ctArticleModel", $("articleModel").value.trim());
+            setVal("ctArticleSerial", $("articleSerial").value.trim());
+            setVal("ctService", $("service").value.trim());
+            setVal("ctTech", $("tech").value.trim());
+            setVal("ctCondBefore", $("condBefore").value.trim());
+            setVal("ctCondAfter", $("condAfter").value.trim());
+
+            setVal("ctDatePicked", fmtDate($("datePicked").value));
+            setVal("ctDateCompleted", fmtDate($("dateCompleted").value));
+            setVal("ctDateDelivered", fmtDate($("dateDelivered").value));
+            setVal("ctWarranty", fmtDate($("warrantyExpiry").value));
+            setVal("ctNextCare", fmtDate($("nextCare").value));
+
+            setVal("ctHandle", $("handle").value.trim());
+            setVal("ctRef", $("refCode").value.trim());
+            safeLink("ctVerify", $("verifyUrl").value.trim());
+            setVal("ctDisclaimer", $("disclaimerTxt").value.trim());
+
+            autoOverall();
+            buildMetricsTable();
+            renderImpactBars();
+            renderTransformationSummary();
+            renderBA();
+
+            // Auto improvement if empty
+            const manual = $("improvePct").value.trim();
+            if (!manual) {
+              const ob = parseFloat($("mOverallB").value) || null;
+              const oa = parseFloat($("mOverallA").value) || null;
+              if (ob && oa && ob > 0) {
+                let imp = ((oa - ob) / ob) * 100;
+                imp = Math.min(100, Math.max(-100, imp));
+                const final = imp > 0 ? imp.toFixed(0) + "%" : "";
+                if (final) $("improvePct").value = final;
+              }
+            }
+
+            const arrival = collectChecked("arrivalList");
+            const work = collectChecked("workList");
+            const care = collectChecked("careList");
+
+            const arrivalBlock = $("arrivalBlock");
+            const arrivalUL = $("arrivalUL");
+            arrivalUL.innerHTML = "";
+            if (arrival.length) {
+              arrival.forEach((t) => {
+                const li = document.createElement("li");
+                li.textContent = t;
+                arrivalUL.appendChild(li);
+              });
+              arrivalBlock.style.display = "";
+            } else arrivalBlock.style.display = "none";
+
+            const workBlock = $("workBlock");
+            const workUL = $("workUL");
+            workUL.innerHTML = "";
+            if (work.length) {
+              work.forEach((t) => {
+                const li = document.createElement("li");
+                li.textContent = t;
+                workUL.appendChild(li);
+              });
+              workBlock.style.display = "";
+            } else workBlock.style.display = "none";
+
+            const careWrap = $("careTableWrap");
+            const careBody = $("careTableBody");
+            careBody.innerHTML = "";
+            if (care.length) {
+              careWrap.style.display = "";
+              care.forEach((cItem, i) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td>${i + 1}</td><td>${cItem}</td>`;
+                careBody.appendChild(tr);
+              });
+            } else careWrap.style.display = "none";
+
+            setVal(
+              "genTime",
+              new Date().toISOString().replace("T", " ").slice(0, 19) + " UTC"
+            );
+            log("Updated");
+          } catch (e) {
+            log("Update error: " + e.message);
+            console.error(e);
+          }
+        }
+
+        $("publishPDF").addEventListener("click", () => {
+          update();
+          window.print();
+        });
+        $("pngExportBtn").addEventListener("click", async () => {
+          update();
+          const node = $("certificate");
+          const scrollY = window.scrollY;
+          window.scrollTo(0, 0);
+          try {
+            if (typeof html2canvas !== "function") {
+              alert("html2canvas not loaded");
+              return;
+            }
+            const canvas = await html2canvas(node, {
+              scale: 2,
+              backgroundColor: "#ffffff",
+              useCORS: true,
+            });
+            const a = document.createElement("a");
+            a.download = "certificate_" + Date.now() + ".png";
+            a.href = canvas.toDataURL("image/png");
+            a.click();
+          } catch (e) {
+            alert("PNG export failed: " + e.message);
+            log("PNG export fail");
+          } finally {
+            window.scrollTo(0, scrollY);
+          }
+        });
+        $("flatPDFBtn").addEventListener("click", async () => {
+          update();
+          const node = $("certificate");
+          const prev = document.body.className;
+          document.body.classList.add("plain");
+          const scrollY = window.scrollY;
+          window.scrollTo(0, 0);
+          try {
+            if (typeof html2canvas !== "function") {
+              alert("html2canvas not loaded");
+              return;
+            }
+            const canvas = await html2canvas(node, {
+              scale: 2,
+              backgroundColor: "#ffffff",
+              useCORS: true,
+            });
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF("p", "pt", "a4");
+            const pw = pdf.internal.pageSize.getWidth();
+            const ph = pdf.internal.pageSize.getHeight();
+            const margin = 20;
+            let imgW = pw - 2 * margin;
+            const ratio = canvas.width / canvas.height;
+            let imgH = imgW / ratio;
+            if (imgH > ph - 2 * margin) {
+              imgH = ph - 2 * margin;
+              imgW = imgH * ratio;
+            }
+            pdf.addImage(
+              canvas.toDataURL("image/jpeg", 0.95),
+              "JPEG",
+              (pw - imgW) / 2,
+              20,
+              imgW,
+              imgH,
+              "",
+              "FAST"
+            );
+            pdf.save("certificate_flat_" + Date.now() + ".pdf");
+            log("Flat PDF saved");
+          } catch (e) {
+            alert("Flat PDF failed: " + e.message);
+            log("Flat PDF fail");
+          } finally {
+            document.body.className = prev;
+            window.scrollTo(0, scrollY);
+            update();
+          }
+        });
+        async function printCertOnly() {
+          update();
+
+          const { jsPDF } = window.jspdf;
+          const cert = document.getElementById("certificate");
+
+          const custName =
+            document.getElementById("ctCustName")?.innerText.trim() ||
+            "Unknown";
+          const custEmail =
+            document.getElementById("ctCustEmail")?.innerText.trim() ||
+            "NoEmail";
+          const fileName = `RESTOREE_CERTIFICATE_${custName}_${custEmail}.pdf`;
+
+          // Capture the certificate div
+          const canvas = await html2canvas(cert, { scale: 2 });
+          const imgData = canvas.toDataURL("image/png");
+
+          // 👉 Preview before download
+          const previewContainer = document.getElementById("previewContainer");
+          if (previewContainer) {
+            previewContainer.innerHTML = ""; // clear old previews
+            const previewImg = document.createElement("img");
+            previewImg.src = imgData;
+            previewImg.style.maxWidth = "100%";
+            previewImg.style.border = "1px solid #ccc";
+            previewContainer.appendChild(previewImg);
+          }
+
+          // --- PDF Generation ---
+          const pdf = new jsPDF("p", "pt", "a4");
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+
+          const imgProps = pdf.getImageProperties(imgData);
+          const imgWidth = pageWidth;
+          const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+          let heightLeft = imgHeight;
+          let position = 0;
+
+          pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+
+          while (heightLeft > 0) {
+            position -= pageHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+
+          pdf.save(fileName);
+        }
+        document
+          .getElementById("printCertOnlyBtn")
+          .addEventListener("click", printCertOnly);
+        $("plainToggleBtn").addEventListener("click", () => {
+          document.body.classList.toggle("plain");
+          update();
+        });
+        $("printFitBtn").addEventListener("click", () => {
+          document.body.classList.toggle("print-fit");
+          log(
+            "Print Fit: " +
+              (document.body.classList.contains("print-fit") ? "ON" : "OFF")
+          );
+        });
+        $("updateBtn").addEventListener("click", () => update());
+        $("testMetricsBtn").addEventListener("click", () => {
+          const sample = {
+            mColorB: 4,
+            mColorA: 8,
+            mStructB: 5,
+            mStructA: 9,
+            mHardB: 3,
+            mHardA: 7,
+            mCleanB: 4,
+            mCleanA: 9,
+            mOdorB: 2,
+            mOdorA: 8,
+          };
+          Object.entries(sample).forEach(([k, v]) => {
+            if ($(k)) $(k).value = v;
+          });
+          update();
+          persist();
+        });
+        $("clearStateBtn").addEventListener("click", () => {
+          if (confirm("Clear saved state?")) {
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+          }
+        });
+        $("showStateBtn").addEventListener("click", () => {
+          try {
+            alert(localStorage.getItem(STORAGE_KEY) || "No state saved.");
+          } catch (e) {}
+        });
+
+        const SAVE_FIELDS = [
+          "custName",
+          "custMobile",
+          "custEmail",
+          "custAddress",
+          "articleBrand",
+          "articleModel",
+          "articleSerial",
+          "service",
+          "tech",
+          "datePicked",
+          "dateCompleted",
+          "dateDelivered",
+          "warrantyExpiry",
+          "condBefore",
+          "condAfter",
+          "improvePct",
+          "handle",
+          "verifyUrl",
+          "refCode",
+          "mColorB",
+          "mColorA",
+          "mStructB",
+          "mStructA",
+          "mHardB",
+          "mHardA",
+          "mCleanB",
+          "mCleanA",
+          "mOdorB",
+          "mOdorA",
+          "nextCare",
+          "disclaimerTxt",
+          "logoUrl",
+          "logoBase64",
+          "articleNameCustom",
+        ];
+        function collectChecked(id) {
+          const root = $(id);
+          if (!root) return [];
+          return Array.from(
+            root.querySelectorAll("input[type=checkbox]:checked")
+          ).map((c) => c.value);
+        }
+        function persist() {
+          try {
+            const data = {};
+            SAVE_FIELDS.forEach((f) => (data[f] = $(f)?.value || ""));
+            data.articleNameSelect = $("articleNameSelect").value;
+            data.arrival = collectChecked("arrivalList");
+            data.work = collectChecked("workList");
+            data.care = collectChecked("careList");
+            data.embeddedLogo = embeddedLogo;
+            data.certID = certID;
+            data.plain = document.body.classList.contains("plain");
+            data.printFit = document.body.classList.contains("print-fit");
+            data.beforeImgs = beforeImgs;
+            data.afterImgs = afterImgs;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          } catch (e) {
+            log("Persist err");
+          }
+        }
+        function restore() {
+          try {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+            SAVE_FIELDS.forEach((f) => {
+              if (data[f] !== undefined && $(f)) $(f).value = data[f];
+            });
+            if (data.articleNameSelect !== undefined)
+              $("articleNameSelect").value = data.articleNameSelect;
+            if ($("articleNameSelect").value === "__CUSTOM__")
+              $("articleNameCustom").style.display = "";
+            certID = data.certID || "";
+            if (data.embeddedLogo) {
+              embeddedLogo = data.embeddedLogo;
+              applyLogo(embeddedLogo);
+              $("logoStatus").textContent = "Logo restored (embedded).";
+            } else {
+              applyLogo($("logoUrl").value.trim());
+              $("logoStatus").textContent = "Logo raw (embed to freeze).";
+            }
+            (data.arrival || []).forEach((v) => {
+              [...$("arrivalList").querySelectorAll("label")].forEach((l) => {
+                if (l.textContent.trim() === v) {
+                  const c = l.querySelector("input");
+                  if (c) c.checked = true;
+                }
+              });
+            });
+            (data.work || []).forEach((v) => {
+              [...$("workList").querySelectorAll("label")].forEach((l) => {
+                if (l.textContent.trim() === v) {
+                  const c = l.querySelector("input");
+                  if (c) c.checked = true;
+                }
+              });
+            });
+            (data.care || []).forEach((v) => {
+              [...$("careList").querySelectorAll("label")].forEach((l) => {
+                if (l.textContent.trim() === v) {
+                  const c = l.querySelector("input");
+                  if (c) c.checked = true;
+                }
+              });
+            });
+            Object.assign(beforeImgs, data.beforeImgs || {});
+            Object.assign(afterImgs, data.afterImgs || {});
+            if (data.plain) document.body.classList.add("plain");
+            if (data.printFit) document.body.classList.add("print-fit");
+          } catch (e) {
+            log("Restore err");
+          }
+        }
+
+        restore();
+        if (!certID) certID = genID();
+        update();
+
+        (async () => {
+          const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+          if (!stored.embeddedLogo && $("logoUrl").value.trim()) {
+            await embedFromUrl();
+          }
+        })();
+
+        [...document.querySelectorAll("input,textarea,select")].forEach(
+          (el) => {
+            el.addEventListener("input", () => {
+              update();
+              persist();
+            });
+          }
+        );
+      });
+    </script>
+  </body>
+</html>
