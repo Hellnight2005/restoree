@@ -1404,8 +1404,8 @@
       v16.7.2
       <div id="statusLog"></div>
       <div style="margin-top: 4px">
-        <button id="forceEmbedBtn">Force Re-Embed Logo</button>
-        <button id="showStateBtn">Show State</button>
+        <button id="forceEmbedBtn"></button>
+        <button id="showStateBtn"></button>
       </div>
     </div>
     <canvas
@@ -1416,204 +1416,1052 @@
     ></canvas>
 
     <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const $ = (id) => document.getElementById(id);
-    window.onerror = (m) => {};
+      document.addEventListener("DOMContentLoaded", () => {
+        const $ = (id) => document.getElementById(id);
+        const log = (msg) => {
+          const area = $("statusLog");
+          if (!area) return;
+          const line = document.createElement("div");
+          // line.textContent=new Date().toLocaleTimeString()+': '+msg;
+          area.prepend(line);
+        };
+        window.onerror = (m) => log("ERR: " + m);
 
-    function fmtDate(v) {
-      if (!v) return "—";
-      const d = new Date(v);
-      if (isNaN(d)) return "—";
-      return d
-        .toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })
-        .replace(/ /g, " ");
-    }
+        function fmtDate(v) {
+          if (!v) return "—";
+          const d = new Date(v);
+          if (isNaN(d)) return "—";
+          return d
+            .toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })
+            .replace(/ /g, " ");
+        }
+        function genID() {
+          return (
+            "RST-" +
+            Math.random().toString(36).slice(2, 6).toUpperCase() +
+            "-" +
+            Date.now().toString().slice(-4)
+          );
+        }
+        function setVal(id, val, ph = "—") {
+          const el = $(id);
+          if (el) el.textContent = val ? val : ph;
+        }
+        function safeLink(id, url) {
+          const el = $(id);
+          if (!el) return;
+          if (url) {
+            el.textContent = url;
+            el.href =
+              (url.startsWith("http") ? "" : "https://") +
+              url.replace(/^https?:\/\//, "");
+          } else {
+            el.textContent = "—";
+            el.removeAttribute("href");
+          }
+        }
 
-    function genID() {
-      return (
-        "RST-" +
-        Math.random().toString(36).slice(2, 6).toUpperCase() +
-        "-" +
-        Date.now().toString().slice(-4)
-      );
-    }
+        const ARRIVAL_BASE = [
+          "Color fading",
+          "Scuffs / scratches",
+          "Edge wear",
+          "Hardware tarnish",
+          "Loss of structure",
+          "Ink transfer",
+          "Water marks",
+          "Oil stains",
+          "Odor",
+          "Interior dirt",
+          "Cracking leather",
+        ];
+        const WORK_BASE = [
+          "Deep clean",
+          "Edge repair",
+          "Color touch-up",
+          "Conditioning",
+          "Hardware polish",
+          "Odor neutralisation",
+          "Stitch reinforcement",
+          "Protective coating",
+          "Finish refinement",
+        ];
+        const CARE_BASE = [
+          "Keep dry 48h",
+          "Store upright",
+          "Avoid sunlight",
+          "Use dust bag",
+          "Wipe after use",
+          "Condition 6 months",
+          "Avoid overloading",
+        ];
 
-    function setVal(id, val, ph = "—") {
-      const el = $(id);
-      if (el) el.textContent = val ? val : ph;
-    }
+        const STORAGE_KEY = "restoree_v16_7_2_state";
+        let certID = "";
+        let embeddedLogo = null;
+        const beforeImgs = {},
+          afterImgs = {};
 
-    function safeLink(id, url) {
-      const el = $(id);
-      if (!el) return;
-      if (url) {
-        el.textContent = url;
-        el.href =
-          (url.startsWith("http") ? "" : "https://") +
-          url.replace(/^https?:\/\//, "");
-      } else {
-        el.textContent = "—";
-        el.removeAttribute("href");
-      }
-    }
+        function renderList(base, id) {
+          const h = $(id);
+          h.innerHTML = "";
+          base.forEach((item) => {
+            const lab = document.createElement("label");
+            lab.className = "tag-item";
+            const chk = document.createElement("input");
+            chk.type = "checkbox";
+            chk.value = item;
+            chk.addEventListener("change", () => {
+              update();
+              persist();
+            });
+            const span = document.createElement("span");
+            span.textContent = item;
+            lab.append(chk, span);
+            h.append(lab);
+          });
+        }
+        renderList(ARRIVAL_BASE, "arrivalList");
+        renderList(WORK_BASE, "workList");
+        renderList(CARE_BASE, "careList");
 
-    const ARRIVAL_BASE = [
-      "Color fading",
-      "Scuffs / scratches",
-      "Edge wear",
-      "Hardware tarnish",
-      "Loss of structure",
-      "Ink transfer",
-      "Water marks",
-      "Oil stains",
-      "Odor",
-      "Interior dirt",
-      "Cracking leather",
-    ];
-    const WORK_BASE = [
-      "Deep clean",
-      "Edge repair",
-      "Color touch-up",
-      "Conditioning",
-      "Hardware polish",
-      "Odor neutralisation",
-      "Stitch reinforcement",
-      "Protective coating",
-      "Finish refinement",
-    ];
-    const CARE_BASE = [
-      "Keep dry 48h",
-      "Store upright",
-      "Avoid sunlight",
-      "Use dust bag",
-      "Wipe after use",
-      "Condition 6 months",
-      "Avoid overloading",
-    ];
+        function addCustom(inputId, listId) {
+          const v = $(inputId).value.trim();
+          if (!v) return;
+          const lab = document.createElement("label");
+          lab.className = "tag-item";
+          const chk = document.createElement("input");
+          chk.type = "checkbox";
+          chk.value = v;
+          chk.checked = true;
+          chk.addEventListener("change", () => {
+            update();
+            persist();
+          });
+          const span = document.createElement("span");
+          span.textContent = v;
+          lab.append(chk, span);
+          $(listId).append(lab);
+          $(inputId).value = "";
+          update();
+          persist();
+        }
+        $("arrivalAddBtn").addEventListener("click", () =>
+          addCustom("arrivalAdd", "arrivalList")
+        );
+        $("workAddBtn").addEventListener("click", () =>
+          addCustom("workAdd", "workList")
+        );
+        $("careAddBtn").addEventListener("click", () =>
+          addCustom("careAdd", "careList")
+        );
+        ["arrivalAdd", "workAdd", "careAdd"].forEach((id) => {
+          $(id).addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              const map = {
+                arrivalAdd: "arrivalList",
+                workAdd: "workList",
+                careAdd: "careList",
+              };
+              addCustom(id, map[id]);
+            }
+          });
+        });
 
-    const STORAGE_KEY = "restoree_v16_7_2_state";
-    let certID = "";
-    let embeddedLogo = null;
-    const beforeImgs = {},
-      afterImgs = {};
+        const METRICS = [
+          { key: "Color", b: "mColorB", a: "mColorA" },
+          { key: "Structure", b: "mStructB", a: "mStructA" },
+          { key: "Hardware", b: "mHardB", a: "mHardA" },
+          { key: "Cleanliness", b: "mCleanB", a: "mCleanA" },
+          { key: "Odor", b: "mOdorB", a: "mOdorA" },
+          { key: "Overall", b: "mOverallB", a: "mOverallA", computed: true },
+        ];
+        function parseNum(id) {
+          const raw = $(id)?.value || "";
+          const v = parseFloat(raw.replace(/[^0-9.]/g, ""));
+          return isNaN(v) ? null : v;
+        }
+        function clamp10(v) {
+          if (v == null) return null;
+          return Math.min(10, Math.max(0, v));
+        }
+        function autoOverall() {
+          const before = METRICS.filter((m) => !m.computed)
+            .map((m) => clamp10(parseNum(m.b)))
+            .filter((v) => v != null);
+          const after = METRICS.filter((m) => !m.computed)
+            .map((m) => clamp10(parseNum(m.a)))
+            .filter((v) => v != null);
+          const avg = (a) =>
+            a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+          const ob = avg(before),
+            oa = avg(after);
+          $("mOverallB").value =
+            ob != null ? ob.toFixed(1).replace(/\.0$/, "") : "";
+          $("mOverallA").value =
+            oa != null ? oa.toFixed(1).replace(/\.0$/, "") : "";
+        }
+        METRICS.filter((m) => !m.computed).forEach((m) => {
+          [m.b, m.a].forEach((id) =>
+            $(id).addEventListener("input", () => {
+              autoOverall();
+              update();
+              persist();
+            })
+          );
+        });
 
-    function renderList(base, id) {
-      const h = $(id);
-      h.innerHTML = "";
-      base.forEach((item) => {
-        const lab = document.createElement("label");
-        lab.className = "tag-item";
-        const chk = document.createElement("input");
-        chk.type = "checkbox";
-        chk.value = item;
-        chk.addEventListener("change", () => {
+        function buildMiniBar(vb, va) {
+          const wrap = document.createElement("div");
+          wrap.className = "mini-bar-wrap";
+          const bSeg = document.createElement("div");
+          bSeg.className = "mini-before";
+          const aSeg = document.createElement("div");
+          aSeg.className = "mini-after";
+          const rSeg = document.createElement("div");
+          rSeg.className = "mini-regress";
+          if (vb != null) bSeg.style.width = (vb / 10) * 100 + "%";
+          if (vb != null && va != null) {
+            if (va >= vb) {
+              aSeg.style.left = (vb / 10) * 100 + "%";
+              aSeg.style.width = ((va - vb) / 10) * 100 + "%";
+            } else {
+              rSeg.style.left = (va / 10) * 100 + "%";
+              rSeg.style.width = ((vb - va) / 10) * 100 + "%";
+              bSeg.style.width = (va / 10) * 100 + "%";
+            }
+          }
+          wrap.append(bSeg, aSeg, rSeg);
+          return wrap;
+        }
+
+        function buildMetricsTable() {
+          const tbody = $("metricsBody");
+          tbody.innerHTML = "";
+          METRICS.forEach((m) => {
+            if (m.computed) return;
+            const vb = clamp10(parseNum(m.b));
+            const va = clamp10(parseNum(m.a));
+            const delta = vb != null && va != null ? va - vb : null;
+            let pct = null;
+            if (vb != null && va != null && vb > 0)
+              pct = ((va - vb) / vb) * 100;
+            const capped =
+              pct != null ? Math.min(100, Math.max(-100, pct)) : null;
+            const tr = document.createElement("tr");
+            const barCell = document.createElement("td");
+            barCell.appendChild(buildMiniBar(vb, va));
+            tr.innerHTML = `<td class="metric">${m.key}</td>
+            <td>${vb != null ? vb : "—"}</td>
+            <td>${va != null ? va : "—"}</td>
+            <td>${
+              delta != null
+                ? (delta > 0 ? "+" : "") +
+                  delta +
+                  (capped != null ? " (" + capped.toFixed(0) + "%)" : "")
+                : "—"
+            }</td>`;
+            tr.appendChild(barCell);
+            tbody.appendChild(tr);
+          });
+          renderOverallRowBar();
+        }
+
+        function renderOverallRowBar() {
+          const ob = parseFloat($("mOverallB").value) || null;
+          const oa = parseFloat($("mOverallA").value) || null;
+          const beforeSeg = $("overallBeforeSeg");
+          const afterSeg = $("overallAfterSeg");
+          const regressSeg = $("overallRegressSeg");
+          beforeSeg.style.width = "0%";
+          afterSeg.style.width = "0%";
+          regressSeg.style.width = "0%";
+          if (ob != null) beforeSeg.style.width = (ob / 10) * 100 + "%";
+          if (ob != null && oa != null) {
+            if (oa >= ob) {
+              afterSeg.style.left = (ob / 10) * 100 + "%";
+              afterSeg.style.width = ((oa - ob) / 10) * 100 + "%";
+              regressSeg.style.width = "0%";
+            } else {
+              regressSeg.style.left = (oa / 10) * 100 + "%";
+              regressSeg.style.width = ((ob - oa) / 10) * 100 + "%";
+              beforeSeg.style.width = (oa / 10) * 100 + "%";
+              afterSeg.style.width = "0%";
+            }
+          }
+          const deltaCell = $("overallDeltaCell");
+          const scoreCell = $("overallScoreCell");
+          let delta = null;
+          let pct = null;
+          if (ob != null && oa != null) {
+            delta = oa - ob;
+            if (ob > 0) pct = (delta / ob) * 100;
+          }
+          scoreCell.textContent =
+            oa != null ? oa.toFixed(1).replace(/\.0$/, "") : "—";
+          deltaCell.textContent =
+            delta != null
+              ? (delta > 0 ? "+" : "") +
+                delta +
+                (pct != null
+                  ? " (" + Math.min(100, Math.max(-100, pct)).toFixed(0) + "%)"
+                  : "")
+              : "—";
+        }
+
+        function renderImpactBars() {
+          const wrap = $("impactRows");
+          wrap.innerHTML = "";
+          const deltas = [];
+          METRICS.filter((m) => !m.computed).forEach((m) => {
+            const vb = clamp10(parseNum(m.b));
+            const va = clamp10(parseNum(m.a));
+            if (vb == null && va == null) return;
+            let pctGain = null;
+            if (vb != null && va != null && vb > 0)
+              pctGain = ((va - vb) / vb) * 100;
+            const capped =
+              pctGain != null ? Math.min(100, Math.max(-100, pctGain)) : null;
+            deltas.push({ k: m.key, b: vb, a: va, g: capped });
+            const row = document.createElement("div");
+            row.className = "impact-row";
+            const label = document.createElement("div");
+            label.className = "impact-label";
+            label.innerHTML = `<span>${m.key}</span><span>${
+              vb != null ? vb : "—"
+            } → ${va != null ? va : "—"}${
+              capped != null ? " (" + capped.toFixed(0) + "%)" : ""
+            }</span>`;
+            const bar = document.createElement("div");
+            bar.className = "bar-dual";
+            const bSeg = document.createElement("div");
+            bSeg.className = "seg-before";
+            const aSeg = document.createElement("div");
+            aSeg.className = "seg-after";
+            const rSeg = document.createElement("div");
+            rSeg.className = "seg-regress";
+            if (vb != null) bSeg.style.width = (vb / 10) * 100 + "%";
+            if (vb != null && va != null) {
+              if (va >= vb) {
+                aSeg.style.left = (vb / 10) * 100 + "%";
+                aSeg.style.width = ((va - vb) / 10) * 100 + "%";
+              } else {
+                rSeg.style.left = (va / 10) * 100 + "%";
+                rSeg.style.width = ((vb - va) / 10) * 100 + "%";
+                bSeg.style.width = (va / 10) * 100 + "%";
+              }
+            }
+            bar.append(bSeg, aSeg, rSeg);
+            row.append(label, bar);
+            wrap.append(row);
+          });
+          const badges = $("impactBadges");
+          badges.innerHTML = "";
+          deltas
+            .filter((d) => d.g != null && d.g > 0)
+            .sort((a, b) => b.g - a.g)
+            .slice(0, 3)
+            .forEach((d) => {
+              const b = document.createElement("div");
+              b.className = "impact-badge";
+              b.textContent = `${d.k} +${d.g.toFixed(0)}%`;
+              badges.append(b);
+            });
+        }
+
+        function computeTransformationScore() {
+          const progresses = [];
+          METRICS.filter((m) => !m.computed).forEach((m) => {
+            const vb = clamp10(parseNum(m.b)),
+              va = clamp10(parseNum(m.a));
+            if (vb != null && va != null && va > vb && vb < 10) {
+              progresses.push(((va - vb) / (10 - vb)) * 100);
+            }
+          });
+          let score = null;
+          if (progresses.length)
+            score = progresses.reduce((x, y) => x + y, 0) / progresses.length;
+          else {
+            const afterVals = METRICS.filter((m) => !m.computed)
+              .map((m) => clamp10(parseNum(m.a)))
+              .filter((v) => v != null);
+            if (afterVals.length)
+              score =
+                (afterVals.reduce((x, y) => x + y, 0) / afterVals.length / 10) *
+                100;
+          }
+          if (score == null) return null;
+          return Math.min(100, Math.max(0, score));
+        }
+
+        function renderTransformationSummary() {
+          const score = computeTransformationScore();
+          setVal("bigScore", score != null ? score.toFixed(0) + "%" : "—");
+          const gainMetrics = [];
+          METRICS.filter((m) => !m.computed).forEach((m) => {
+            const vb = clamp10(parseNum(m.b)),
+              va = clamp10(parseNum(m.a));
+            if (vb != null && va != null && vb > 0) {
+              let g = ((va - vb) / vb) * 100;
+              g = Math.min(100, Math.max(-100, g));
+              if (g > 0) gainMetrics.push({ k: m.key, g });
+            }
+          });
+          gainMetrics.sort((a, b) => b.g - a.g);
+          const tg = $("topGains");
+          tg.innerHTML = "";
+          gainMetrics.slice(0, 3).forEach((gm) => {
+            const pill = document.createElement("div");
+            pill.className = "gain-pill";
+            pill.textContent = `${gm.k} +${gm.g.toFixed(0)}%`;
+            tg.appendChild(pill);
+          });
+        }
+
+        function loadImg(e, store, key) {
+          const f = e.target.files[0];
+          if (!f) {
+            delete store[key];
+            update();
+            persist();
+            return;
+          }
+          const fr = new FileReader();
+          fr.onload = (ev) => {
+            store[key] = ev.target.result;
+            update();
+            persist();
+          };
+          fr.readAsDataURL(f);
+        }
+        ["before1", "before2", "before3", "before4"].forEach((id) =>
+          $(id).addEventListener("change", (e) => loadImg(e, beforeImgs, id))
+        );
+        ["after1", "after2", "after3", "after4"].forEach((id) =>
+          $(id).addEventListener("change", (e) => loadImg(e, afterImgs, id))
+        );
+
+        function renderBA() {
+          const grid = $("baGrid");
+          if (!grid) return;
+          grid.innerHTML = "";
+          const beforeArray = Object.values(beforeImgs);
+          const afterArray = Object.values(afterImgs);
+          const max = Math.max(beforeArray.length, afterArray.length);
+          for (let i = 0; i < max; i++) {
+            const bCell = document.createElement("div");
+            bCell.className = "ba-cell";
+            if (beforeArray[i]) {
+              const img = document.createElement("img");
+              img.src = beforeArray[i];
+              bCell.appendChild(img);
+            } else {
+              bCell.classList.add("empty");
+              bCell.textContent = "—";
+            }
+            const aCell = document.createElement("div");
+            aCell.className = "ba-cell";
+            if (afterArray[i]) {
+              const img = document.createElement("img");
+              img.src = afterArray[i];
+              aCell.appendChild(img);
+            } else {
+              aCell.classList.add("empty");
+              aCell.textContent = "—";
+            }
+            grid.append(bCell, aCell);
+          }
+        }
+
+        function applyLogo(src) {
+          const logo = $("certLogo"),
+            fallback = $("logoFallback");
+          if (!logo || !fallback) return;
+          if (src) {
+            logo.style.display = "block";
+            fallback.style.display = "none";
+            logo.src = src;
+          } else {
+            logo.style.display = "none";
+            fallback.style.display = "block";
+          }
+        }
+        function flattenLogo(src) {
+          return new Promise((res) => {
+            try {
+              const img = new Image();
+              img.crossOrigin = "anonymous";
+              img.onload = () => {
+                const c = $("hiddenCanvas");
+                c.width = img.naturalWidth;
+                c.height = img.naturalHeight;
+                const ctx = c.getContext("2d");
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, c.width, c.height);
+                ctx.drawImage(img, 0, 0, c.width, c.height);
+                try {
+                  res(c.toDataURL("image/png"));
+                } catch (e) {
+                  res(src);
+                }
+              };
+              img.onerror = () => res(src);
+              img.src = src;
+            } catch (e) {
+              res(src);
+            }
+          });
+        }
+        async function embedFromUrl() {
+          const url = $("logoUrl").value.trim();
+          if (!url) {
+            $("logoStatus").textContent = "No URL";
+            log("Logo: no URL");
+            return;
+          }
+          $("logoStatus").textContent = "Embedding...";
+          try {
+            const resp = await fetch(url, { mode: "cors" });
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            const blob = await resp.blob();
+            const data = await new Promise((res, rej) => {
+              const fr = new FileReader();
+              fr.onload = () => res(fr.result);
+              fr.onerror = () => rej(fr.error);
+              fr.readAsDataURL(blob);
+            });
+            embeddedLogo = await flattenLogo(data);
+            applyLogo(embeddedLogo);
+            $("logoStatus").textContent = "Embedded & cached.";
+            log("Logo embedded OK");
+            persist();
+          } catch (e) {
+            $("logoStatus").textContent = "Embed fail: " + e.message;
+            log("Logo embed failed: " + e.message);
+          }
+        }
+        $("applyUrlBtn").addEventListener("click", () => {
+          const url = $("logoUrl").value.trim();
+          applyLogo(url || null);
+          $("logoStatus").textContent = "URL applied (not embedded).";
+          log("Logo raw URL applied");
+        });
+        $("embedBtn").addEventListener("click", () => embedFromUrl());
+        $("resetLogoBtn").addEventListener("click", () => {
+          embeddedLogo = null;
+          const url = $("logoUrl").value.trim();
+          applyLogo(url || null);
+          $("logoStatus").textContent = "Reset to raw URL.";
+          log("Logo reset");
+          persist();
+        });
+        $("logoFile").addEventListener("change", (e) => {
+          const f = e.target.files[0];
+          if (!f) return;
+          const fr = new FileReader();
+          fr.onload = async (ev) => {
+            embeddedLogo = await flattenLogo(ev.target.result);
+            applyLogo(embeddedLogo);
+            $("logoStatus").textContent = "Embedded from upload.";
+            log("Logo uploaded & embedded");
+            persist();
+          };
+          fr.readAsDataURL(f);
+        });
+        $("useBase64Btn").addEventListener("click", async () => {
+          const b = $("logoBase64").value.trim();
+          if (!b.startsWith("data:image")) {
+            $("logoStatus").textContent = "Invalid base64";
+            log("Logo base64 invalid");
+            return;
+          }
+          embeddedLogo = await flattenLogo(b);
+          applyLogo(embeddedLogo);
+          $("logoStatus").textContent = "Base64 embedded.";
+          log("Logo base64 embedded");
+          persist();
+        });
+        $("forceEmbedBtn").addEventListener("click", () => embedFromUrl());
+
+        const dropZone = $("logoDropZone");
+        const hiddenHeaderFile = $("headerLogoFile");
+        dropZone.addEventListener("click", () => hiddenHeaderFile.click());
+        dropZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          dropZone.classList.add("dragover");
+        });
+        dropZone.addEventListener("dragleave", () =>
+          dropZone.classList.remove("dragover")
+        );
+        dropZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dropZone.classList.remove("dragover");
+          if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleHeaderLogoFile(e.dataTransfer.files[0]);
+          }
+        });
+        hiddenHeaderFile.addEventListener("change", (e) => {
+          const f = e.target.files[0];
+          if (f) handleHeaderLogoFile(f);
+        });
+        function handleHeaderLogoFile(file) {
+          const fr = new FileReader();
+          fr.onload = async (ev) => {
+            embeddedLogo = await flattenLogo(ev.target.result);
+            applyLogo(embeddedLogo);
+            $("logoStatus").textContent = "Header logo embedded (drop).";
+            log("Header logo embedded from drop");
+            persist();
+          };
+          fr.readAsDataURL(file);
+        }
+
+        const articleSelect = $("articleNameSelect");
+        const articleCustom = $("articleNameCustom");
+        articleSelect.addEventListener("change", () => {
+          if (articleSelect.value === "__CUSTOM__")
+            articleCustom.style.display = "";
+          else {
+            articleCustom.style.display = "none";
+            articleCustom.value = "";
+          }
           update();
           persist();
         });
-        const span = document.createElement("span");
-        span.textContent = item;
-        lab.append(chk, span);
-        h.append(lab);
-      });
-    }
-    renderList(ARRIVAL_BASE, "arrivalList");
-    renderList(WORK_BASE, "workList");
-    renderList(CARE_BASE, "careList");
-
-    function addCustom(inputId, listId) {
-      const v = $(inputId).value.trim();
-      if (!v) return;
-      const lab = document.createElement("label");
-      lab.className = "tag-item";
-      const chk = document.createElement("input");
-      chk.type = "checkbox";
-      chk.value = v;
-      chk.checked = true;
-      chk.addEventListener("change", () => {
-        update();
-        persist();
-      });
-      const span = document.createElement("span");
-      span.textContent = v;
-      lab.append(chk, span);
-      $(listId).append(lab);
-      $(inputId).value = "";
-      update();
-      persist();
-    }
-    $("arrivalAddBtn").addEventListener("click", () =>
-      addCustom("arrivalAdd", "arrivalList")
-    );
-    $("workAddBtn").addEventListener("click", () =>
-      addCustom("workAdd", "workList")
-    );
-    $("careAddBtn").addEventListener("click", () =>
-      addCustom("careAdd", "careList")
-    );
-    ["arrivalAdd", "workAdd", "careAdd"].forEach((id) => {
-      $(id).addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          const map = {
-            arrivalAdd: "arrivalList",
-            workAdd: "workList",
-            careAdd: "careList",
-          };
-          addCustom(id, map[id]);
-        }
-      });
-    });
-
-    const METRICS = [
-      { key: "Color", b: "mColorB", a: "mColorA" },
-      { key: "Structure", b: "mStructB", a: "mStructA" },
-      { key: "Hardware", b: "mHardB", a: "mHardA" },
-      { key: "Cleanliness", b: "mCleanB", a: "mCleanA" },
-      { key: "Odor", b: "mOdorB", a: "mOdorA" },
-      { key: "Overall", b: "mOverallB", a: "mOverallA", computed: true },
-    ];
-
-    function parseNum(id) {
-      const raw = $(id)?.value || "";
-      const v = parseFloat(raw.replace(/[^0-9.]/g, ""));
-      return isNaN(v) ? null : v;
-    }
-
-    function clamp10(v) {
-      if (v == null) return null;
-      return Math.min(10, Math.max(0, v));
-    }
-
-    function autoOverall() {
-      const before = METRICS.filter((m) => !m.computed)
-        .map((m) => clamp10(parseNum(m.b)))
-        .filter((v) => v != null);
-      const after = METRICS.filter((m) => !m.computed)
-        .map((m) => clamp10(parseNum(m.a)))
-        .filter((v) => v != null);
-      const avg = (a) =>
-        a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
-      const ob = avg(before),
-        oa = avg(after);
-      $("mOverallB").value =
-        ob != null ? ob.toFixed(1).replace(/\.0$/, "") : "";
-      $("mOverallA").value =
-        oa != null ? oa.toFixed(1).replace(/\.0$/, "") : "";
-    }
-
-    METRICS.filter((m) => !m.computed).forEach((m) => {
-      [m.b, m.a].forEach((id) =>
-        $(id).addEventListener("input", () => {
-          autoOverall();
+        articleCustom.addEventListener("input", () => {
           update();
           persist();
-        })
-      );
-    });
+        });
 
+        function collectChecked(id) {
+          const root = $(id);
+          if (!root) return [];
+          return Array.from(
+            root.querySelectorAll("input[type=checkbox]:checked")
+          ).map((c) => c.value);
+        }
+
+        function update() {
+          try {
+            if (!certID) certID = genID();
+            setVal("ctID", certID);
+            const idField = $("idField");
+            if (idField) idField.value = certID;
+
+            setVal("ctCustName", $("custName").value.trim());
+            setVal("ctCustMobile", $("custMobile").value.trim());
+            setVal("ctCustEmail", $("custEmail").value.trim());
+            setVal("ctCustAddress", $("custAddress").value.trim());
+
+            let art = articleSelect.value;
+            if (art === "__CUSTOM__") art = articleCustom.value.trim();
+            setVal("ctArticleName", art);
+            setVal("ctArticleBrand", $("articleBrand").value.trim());
+            setVal("ctArticleModel", $("articleModel").value.trim());
+            setVal("ctArticleSerial", $("articleSerial").value.trim());
+            setVal("ctService", $("service").value.trim());
+            setVal("ctTech", $("tech").value.trim());
+            setVal("ctCondBefore", $("condBefore").value.trim());
+            setVal("ctCondAfter", $("condAfter").value.trim());
+
+            setVal("ctDatePicked", fmtDate($("datePicked").value));
+            setVal("ctDateCompleted", fmtDate($("dateCompleted").value));
+            setVal("ctDateDelivered", fmtDate($("dateDelivered").value));
+            setVal("ctWarranty", fmtDate($("warrantyExpiry").value));
+            setVal("ctNextCare", fmtDate($("nextCare").value));
+
+            setVal("ctHandle", $("handle").value.trim());
+            setVal("ctRef", $("refCode").value.trim());
+            safeLink("ctVerify", $("verifyUrl").value.trim());
+            setVal("ctDisclaimer", $("disclaimerTxt").value.trim());
+
+            autoOverall();
+            buildMetricsTable();
+            renderImpactBars();
+            renderTransformationSummary();
+            renderBA();
+
+            // Auto improvement if empty
+            const manual = $("improvePct").value.trim();
+            if (!manual) {
+              const ob = parseFloat($("mOverallB").value) || null;
+              const oa = parseFloat($("mOverallA").value) || null;
+              if (ob && oa && ob > 0) {
+                let imp = ((oa - ob) / ob) * 100;
+                imp = Math.min(100, Math.max(-100, imp));
+                const final = imp > 0 ? imp.toFixed(0) + "%" : "";
+                if (final) $("improvePct").value = final;
+              }
+            }
+
+            const arrival = collectChecked("arrivalList");
+            const work = collectChecked("workList");
+            const care = collectChecked("careList");
+
+            const arrivalBlock = $("arrivalBlock");
+            const arrivalUL = $("arrivalUL");
+            arrivalUL.innerHTML = "";
+            if (arrival.length) {
+              arrival.forEach((t) => {
+                const li = document.createElement("li");
+                li.textContent = t;
+                arrivalUL.appendChild(li);
+              });
+              arrivalBlock.style.display = "";
+            } else arrivalBlock.style.display = "none";
+
+            const workBlock = $("workBlock");
+            const workUL = $("workUL");
+            workUL.innerHTML = "";
+            if (work.length) {
+              work.forEach((t) => {
+                const li = document.createElement("li");
+                li.textContent = t;
+                workUL.appendChild(li);
+              });
+              workBlock.style.display = "";
+            } else workBlock.style.display = "none";
+
+            const careWrap = $("careTableWrap");
+            const careBody = $("careTableBody");
+            careBody.innerHTML = "";
+            if (care.length) {
+              careWrap.style.display = "";
+              care.forEach((cItem, i) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td>${i + 1}</td><td>${cItem}</td>`;
+                careBody.appendChild(tr);
+              });
+            } else careWrap.style.display = "none";
+
+            setVal(
+              "genTime",
+              new Date().toISOString().replace("T", " ").slice(0, 19) + " UTC"
+            );
+            log("Updated");
+          } catch (e) {
+            log("Update error: " + e.message);
+            console.error(e);
+          }
+        }
+
+        $("publishPDF").addEventListener("click", () => {
+          update();
+          window.print();
+        });
+        $("pngExportBtn").addEventListener("click", async () => {
+          update();
+          const node = $("certificate");
+          const scrollY = window.scrollY;
+          window.scrollTo(0, 0);
+          try {
+            if (typeof html2canvas !== "function") {
+              alert("html2canvas not loaded");
+              return;
+            }
+            const canvas = await html2canvas(node, {
+              scale: 2,
+              backgroundColor: "#ffffff",
+              useCORS: true,
+            });
+            const a = document.createElement("a");
+            a.download = "certificate_" + Date.now() + ".png";
+            a.href = canvas.toDataURL("image/png");
+            a.click();
+          } catch (e) {
+            alert("PNG export failed: " + e.message);
+            log("PNG export fail");
+          } finally {
+            window.scrollTo(0, scrollY);
+          }
+        });
+        $("flatPDFBtn").addEventListener("click", async () => {
+          update();
+          const node = $("certificate");
+          const prev = document.body.className;
+          document.body.classList.add("plain");
+          const scrollY = window.scrollY;
+          window.scrollTo(0, 0);
+          try {
+            if (typeof html2canvas !== "function") {
+              alert("html2canvas not loaded");
+              return;
+            }
+            const canvas = await html2canvas(node, {
+              scale: 2,
+              backgroundColor: "#ffffff",
+              useCORS: true,
+            });
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF("p", "pt", "a4");
+            const pw = pdf.internal.pageSize.getWidth();
+            const ph = pdf.internal.pageSize.getHeight();
+            const margin = 20;
+            let imgW = pw - 2 * margin;
+            const ratio = canvas.width / canvas.height;
+            let imgH = imgW / ratio;
+            if (imgH > ph - 2 * margin) {
+              imgH = ph - 2 * margin;
+              imgW = imgH * ratio;
+            }
+            pdf.addImage(
+              canvas.toDataURL("image/jpeg", 0.95),
+              "JPEG",
+              (pw - imgW) / 2,
+              20,
+              imgW,
+              imgH,
+              "",
+              "FAST"
+            );
+            pdf.save("certificate_flat_" + Date.now() + ".pdf");
+            log("Flat PDF saved");
+          } catch (e) {
+            alert("Flat PDF failed: " + e.message);
+            log("Flat PDF fail");
+          } finally {
+            document.body.className = prev;
+            window.scrollTo(0, scrollY);
+            update();
+          }
+        });
+        async function printCertOnly() {
+          update();
+
+          const { jsPDF } = window.jspdf;
+          const cert = document.getElementById("certificate");
+
+          const custName =
+            document.getElementById("ctCustName")?.innerText.trim() ||
+            "Unknown";
+          const custEmail =
+            document.getElementById("ctCustEmail")?.innerText.trim() ||
+            "NoEmail";
+          const fileName = `RESTOREE_CERTIFICATE_${custName}_${custEmail}.pdf`;
+
+          // Capture the certificate div
+          const canvas = await html2canvas(cert, { scale: 2 });
+          const imgData = canvas.toDataURL("image/png");
+
+          // 👉 Preview before download
+          const previewContainer = document.getElementById("previewContainer");
+          if (previewContainer) {
+            previewContainer.innerHTML = ""; // clear old previews
+            const previewImg = document.createElement("img");
+            previewImg.src = imgData;
+            previewImg.style.maxWidth = "100%";
+            previewImg.style.border = "1px solid #ccc";
+            previewContainer.appendChild(previewImg);
+          }
+
+          // --- PDF Generation ---
+          const pdf = new jsPDF("p", "pt", "a4");
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+
+          const imgProps = pdf.getImageProperties(imgData);
+          const imgWidth = pageWidth;
+          const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+          let heightLeft = imgHeight;
+          let position = 0;
+
+          pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+
+          while (heightLeft > 0) {
+            position -= pageHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+
+          pdf.save(fileName);
+        }
+        document
+          .getElementById("printCertOnlyBtn")
+          .addEventListener("click", printCertOnly);
+        $("plainToggleBtn").addEventListener("click", () => {
+          document.body.classList.toggle("plain");
+          update();
+        });
+        $("printFitBtn").addEventListener("click", () => {
+          document.body.classList.toggle("print-fit");
+          log(
+            "Print Fit: " +
+              (document.body.classList.contains("print-fit") ? "ON" : "OFF")
+          );
+        });
+        $("updateBtn").addEventListener("click", () => update());
+        $("testMetricsBtn").addEventListener("click", () => {
+          const sample = {
+            mColorB: 4,
+            mColorA: 8,
+            mStructB: 5,
+            mStructA: 9,
+            mHardB: 3,
+            mHardA: 7,
+            mCleanB: 4,
+            mCleanA: 9,
+            mOdorB: 2,
+            mOdorA: 8,
+          };
+          Object.entries(sample).forEach(([k, v]) => {
+            if ($(k)) $(k).value = v;
+          });
+          update();
+          persist();
+        });
+        $("clearStateBtn").addEventListener("click", () => {
+          if (confirm("Clear saved state?")) {
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+          }
+        });
+        $("showStateBtn").addEventListener("click", () => {
+          try {
+            alert(localStorage.getItem(STORAGE_KEY) || "No state saved.");
+          } catch (e) {}
+        });
+
+        const SAVE_FIELDS = [
+          "custName",
+          "custMobile",
+          "custEmail",
+          "custAddress",
+          "articleBrand",
+          "articleModel",
+          "articleSerial",
+          "service",
+          "tech",
+          "datePicked",
+          "dateCompleted",
+          "dateDelivered",
+          "warrantyExpiry",
+          "condBefore",
+          "condAfter",
+          "improvePct",
+          "handle",
+          "verifyUrl",
+          "refCode",
+          "mColorB",
+          "mColorA",
+          "mStructB",
+          "mStructA",
+          "mHardB",
+          "mHardA",
+          "mCleanB",
+          "mCleanA",
+          "mOdorB",
+          "mOdorA",
+          "nextCare",
+          "disclaimerTxt",
+          "logoUrl",
+          "logoBase64",
+          "articleNameCustom",
+        ];
+        function collectChecked(id) {
+          const root = $(id);
+          if (!root) return [];
+          return Array.from(
+            root.querySelectorAll("input[type=checkbox]:checked")
+          ).map((c) => c.value);
+        }
+        function persist() {
+          try {
+            const data = {};
+            SAVE_FIELDS.forEach((f) => (data[f] = $(f)?.value || ""));
+            data.articleNameSelect = $("articleNameSelect").value;
+            data.arrival = collectChecked("arrivalList");
+            data.work = collectChecked("workList");
+            data.care = collectChecked("careList");
+            data.embeddedLogo = embeddedLogo;
+            data.certID = certID;
+            data.plain = document.body.classList.contains("plain");
+            data.printFit = document.body.classList.contains("print-fit");
+            data.beforeImgs = beforeImgs;
+            data.afterImgs = afterImgs;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          } catch (e) {
+            log("Persist err");
+          }
+        }
+        function restore() {
+          try {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+            SAVE_FIELDS.forEach((f) => {
+              if (data[f] !== undefined && $(f)) $(f).value = data[f];
+            });
+            if (data.articleNameSelect !== undefined)
+              $("articleNameSelect").value = data.articleNameSelect;
+            if ($("articleNameSelect").value === "__CUSTOM__")
+              $("articleNameCustom").style.display = "";
+            certID = data.certID || "";
+            if (data.embeddedLogo) {
+              embeddedLogo = data.embeddedLogo;
+              applyLogo(embeddedLogo);
+              $("logoStatus").textContent = "Logo restored (embedded).";
+            } else {
+              applyLogo($("logoUrl").value.trim());
+              $("logoStatus").textContent = "Logo raw (embed to freeze).";
+            }
+            (data.arrival || []).forEach((v) => {
+              [...$("arrivalList").querySelectorAll("label")].forEach((l) => {
+                if (l.textContent.trim() === v) {
+                  const c = l.querySelector("input");
+                  if (c) c.checked = true;
+                }
+              });
+            });
+            (data.work || []).forEach((v) => {
+              [...$("workList").querySelectorAll("label")].forEach((l) => {
+                if (l.textContent.trim() === v) {
+                  const c = l.querySelector("input");
+                  if (c) c.checked = true;
+                }
+              });
+            });
+            (data.care || []).forEach((v) => {
+              [...$("careList").querySelectorAll("label")].forEach((l) => {
+                if (l.textContent.trim() === v) {
+                  const c = l.querySelector("input");
+                  if (c) c.checked = true;
+                }
+              });
+            });
+            Object.assign(beforeImgs, data.beforeImgs || {});
+            Object.assign(afterImgs, data.afterImgs || {});
+            if (data.plain) document.body.classList.add("plain");
+            if (data.printFit) document.body.classList.add("print-fit");
+          } catch (e) {
+            log("Restore err");
+          }
+        }
+
+        restore();
+        if (!certID) certID = genID();
+        update();
+
+        (async () => {
+          const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+          if (!stored.embeddedLogo && $("logoUrl").value.trim()) {
+            await embedFromUrl();
+          }
+        })();
+
+        [...document.querySelectorAll("input,textarea,select")].forEach(
+          (el) => {
+            el.addEventListener("input", () => {
+              update();
+              persist();
+            });
+          }
+        );
+      });
+    </script>
   </body>
 </html>
