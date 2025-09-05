@@ -30,8 +30,6 @@ const Footer = () => {
 
   const socialLinks = [
     { name: 'Instagram', icon: Instagram, href: '#' },
-    // { name: 'Facebook', icon: Facebook, href: '#' },
-    // { name: 'Twitter', icon: Twitter, href: '#' },
     { name: 'LinkedIn', icon: Linkedin, href: '#' },
     { name: 'WhatsApp', icon: MessageCircle, href: '#' }, // Using MessageCircle as an alternative
     { name: 'YouTube', icon: Youtube, href: '#' },
@@ -52,9 +50,12 @@ const Footer = () => {
                 Réstorée
               </span>
             </Link>
+            {/* UPDATED DESCRIPTION CONTENT */}
             <p className="text-gray-300 text-sm mb-4">
-              Luxury restoration services for bags, shoes, and accessories.
-              Revive your vibe with expert craftsmanship.
+              Réstorée is your trusted destination for luxury sneaker, bag, leather, furniture, and automobile restoration. We bring world-class cleaning, restoration, re-colouring, repairs, and personalisation for sneakers, bags, leather goods, and interiors.
+            </p>
+            <p className="text-fawn font-copperplate text-base font-semibold">
+              Réstorée: Luxury care, redefined.
             </p>
           </div>
 
@@ -122,31 +123,33 @@ const Footer = () => {
               Get in Touch
             </h3>
             <div className="space-y-3 text-sm">
-              {/* Updated location with link to Google Maps */}
+              {/* Email Link */}
               <a
-                href="https://www.google.com/maps/place/Andheri,+Mumbai/"
+                href="mailto:connect@restoree.in"
+                className="flex items-center space-x-3 text-gray-300 hover:text-fawn transition-colors duration-200"
+              >
+                <Mail className="w-4 h-4 text-fawn" />
+                <span>connect@restoree.in</span>
+              </a>
+              {/* Phone Link */}
+              <a
+                href="tel:+917977186066"
+                className="flex items-center space-x-3 text-gray-300 hover:text-fawn transition-colors duration-200"
+              >
+                <Phone className="w-4 h-4 text-fawn" />
+                <span>+91 7977186066</span>
+              </a>
+              {/* Address with Google Maps link */}
+              <a
+                href="http://maps.google.com/?q=Réstorée, Oshiwara, Jogeshwari West, Mumbai-400102"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-3 text-gray-300 hover:text-fawn transition-colors duration-200"
               >
                 <MapPin className="w-4 h-4 text-fawn" />
-                <span>Andheri, Mumbai</span>
-              </a>
-              {/* Phone Link */}
-              {/* <a
-                href="tel:+971501234567"
-                className="flex items-center space-x-3 text-gray-300 hover:text-fawn transition-colors duration-200"
-              >
-                <Phone className="w-4 h-4 text-fawn" />
-                <span>+971 50 123 4567</span>
-              </a> */}
-              {/* Email Link */}
-              <a
-                href="mailto:hello@restoree.ae"
-                className="flex items-center space-x-3 text-gray-300 hover:text-fawn transition-colors duration-200"
-              >
-                <Mail className="w-4 h-4 text-fawn" />
-                <span>hello@restoree.ae</span>
+                <span>
+                  Shop no 6, Raigad Military school premises, Oshiwara, Jogeshwari West, Mumbai-400102
+                </span>
               </a>
             </div>
           </div>
