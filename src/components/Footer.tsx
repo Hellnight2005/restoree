@@ -54,9 +54,6 @@ const Footer = () => {
             <p className="text-gray-300 text-sm mb-4">
               Réstorée is your trusted destination for luxury sneaker, bag, leather, furniture, and automobile restoration. We bring world-class cleaning, restoration, re-colouring, repairs, and personalisation for sneakers, bags, leather goods, and interiors.
             </p>
-            <p className="text-fawn font-copperplate text-base font-semibold">
-              Réstorée: Luxury care, redefined.
-            </p>
           </div>
 
           {/* Navigation Links - Services, Company, Support */}
@@ -155,10 +152,10 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom Bar: Social & Copyright */}
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 text-gray-400 text-sm">
-          {/* Social Links */}
-          <div className="flex space-x-4 mb-4 md:mb-0">
+        {/* Bottom Bar: Social, Slogan & Copyright */}
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 text-gray-400 text-sm space-y-4 md:space-y-0">
+          {/* Social Links - Left aligned */}
+          <div className="flex space-x-4 w-full md:w-auto md:flex-initial justify-center md:justify-start">
             {socialLinks.map((social) => {
               const Icon = social.icon
               return (
@@ -175,8 +172,12 @@ const Footer = () => {
               )
             })}
           </div>
-          {/* Copyright */}
-          <p>© {currentYear} Réstorée. All rights reserved.</p>
+          {/* Slogan - Centered */}
+          <p className="text-fawn font-copperplate font-semibold text-lg text-center md:flex-grow">
+            Réstorée: Luxury care, redefined.
+          </p>
+          {/* Copyright - Right aligned */}
+          <p className="text-center md:text-right w-full md:w-auto md:flex-initial">© {currentYear} Réstorée. All rights reserved.</p>
         </div>
       </div>
     </footer>
