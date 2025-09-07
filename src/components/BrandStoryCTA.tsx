@@ -24,7 +24,8 @@ const BrandStoryCTA = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate section on scroll
+      // Animate section content on scroll with a simple fade-in
+      // KEY CHANGE: Removed the 'reverse' toggleAction to prevent content from moving
       gsap.fromTo('.brand-story-content',
         { opacity: 0, y: 50 },
         {
@@ -35,21 +36,20 @@ const BrandStoryCTA = () => {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 80%",
-            end: "bottom 20%",
-            toggleActions: "play none none reverse"
+            once: true, // Only plays the fade-in once
+            toggleActions: "play none none none"
           }
         }
       )
 
-      // Animate stats numbers correctly
+      // Animate stats numbers only on enter (scrolling down)
       statsRef.current.forEach((stat, index) => {
         if (stat) {
           const targetNumber = stats[index].number
           const obj = { value: 0 }
 
-          gsap.fromTo(
-            obj, // animate this object
-            { value: 0 },
+          gsap.to(
+            obj,
             {
               value: targetNumber,
               duration: 2.5,
@@ -57,18 +57,16 @@ const BrandStoryCTA = () => {
               scrollTrigger: {
                 trigger: stat,
                 start: "top 80%",
-                once: true
+                once: true,
+                toggleActions: "play none none none"
               },
               onUpdate: function () {
                 const value = Math.ceil(obj.value)
                 if (index === 0) {
-                  // For Items Restored (100K+)
                   stat.textContent = `${value}K+`
                 } else if (index === 1) {
-                  // For Years Experience (15+)
                   stat.textContent = `${value}+`
                 } else if (index === 2) {
-                  // For Customer Satisfaction (98%)
                   stat.textContent = `${value}%`
                 }
               }
@@ -134,7 +132,7 @@ const BrandStoryCTA = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <Link href="/about">
+            <Link href="/about#our-story">
               <motion.button
                 className="btn-primary text-lg px-8 py-4 group"
                 whileHover={{ scale: 1.05 }}
@@ -214,3 +212,5 @@ const BrandStoryCTA = () => {
 }
 
 export default BrandStoryCTA
+// I want to make changes to the component when i am on the brand story section the floating element should not visible when i scroll out the brand story section from up and down then this floating animation become visible.
+// and when i on the brand story section on the viewport the animation become visible and when i get out of the viewport it will get invisible again.
