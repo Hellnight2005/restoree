@@ -38,7 +38,7 @@ const AboutPage = () => {
       </section>
 
       {/* 2. Our Story - First main content section, using bg-sand-light and dark:bg-gray-800 */}
-      <section className="section-padding bg-sand-light dark:bg-gray-800">
+      <section id="our-story" className="section-padding bg-sand-light dark:bg-gray-800">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -313,7 +313,7 @@ const AboutPage = () => {
       </section>
 
       {/* 7. Brand Timeline (Our Journey) - Fifth section, using bg-sand-medium and dark:bg-gray-900 */}
-      <section className="section-padding bg-sand-dark dark:bg-gray-700">
+      <section className="section-padding bg-sand-medium dark:bg-gray-700">
         <div className="container-custom">
           <motion.h2
             className="font-copperplate text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-12 text-center"
