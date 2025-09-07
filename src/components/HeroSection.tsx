@@ -4,6 +4,8 @@ import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ChevronDown } from 'lucide-react'
+import Link from 'next/link'
+import Cookies from 'js-cookie'
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null)
@@ -16,16 +18,16 @@ const HeroSection = () => {
       // Animate headline with stagger effect
       if (headlineRef.current) {
         const chars = headlineRef.current.textContent?.split('') || []
-        headlineRef.current.innerHTML = chars.map(char => 
+        headlineRef.current.innerHTML = chars.map(char =>
           char === ' ' ? ' ' : `<span class="char">${char}</span>`
         ).join('')
-        
-        gsap.fromTo('.char', 
+
+        gsap.fromTo('.char',
           { opacity: 0, y: 50 },
-          { 
-            opacity: 1, 
-            y: 0, 
-            duration: 0.8, 
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
             stagger: 0.05,
             ease: "back.out(1.7)"
           }
@@ -38,7 +40,7 @@ const HeroSection = () => {
         { opacity: 1, y: 0, duration: 1, delay: 0.5, ease: "power2.out" }
       )
 
-      // Animate CTA button
+      // Animate CTA button container
       gsap.fromTo(ctaRef.current,
         { opacity: 0, scale: 0.8 },
         { opacity: 1, scale: 1, duration: 0.8, delay: 1, ease: "back.out(1.7)" }
@@ -67,14 +69,24 @@ const HeroSection = () => {
     }
   }
 
+  const handleBookingClick = () => {
+    const userProfileCookie = Cookies.get('user-profile')
+
+    if (userProfileCookie) {
+      window.location.href = '/booking'
+    } else {
+      window.location.href = '/api/user/auth/google_login'
+    }
+  }
+
   return (
-    <section 
+    <section
       ref={heroRef}
-      className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
     >
       {/* Background Image/Video */}
       <div className="absolute inset-0 z-0">
-        <div 
+        <div
           className="w-full h-full bg-cover bg-center bg-no-repeat opacity-40"
           style={{
             backgroundImage: "url('/images/hero-bg.jpg')"
@@ -109,22 +121,29 @@ const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <motion.button
-            onClick={scrollToServices}
-            className="btn-primary text-lg px-8 py-4"
+          {/* Book a Consultation button with conditional logic */}
+          <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Book a Consultation
-          </motion.button>
-          
-          <motion.button
-            className="btn-secondary text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-gray-900"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View Our Work
-          </motion.button>
+            <button
+              onClick={handleBookingClick}
+              className="btn-primary text-lg px-8 py-4"
+            >
+              Book a Consultation
+            </button>
+          </motion.div>
+
+          {/* View Our Work Link */}
+          <Link href="/gallery" passHref>
+            <motion.button
+              className="btn-secondary text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-gray-900"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              View Our Work
+            </motion.button>
+          </Link>
         </motion.div>
       </div>
 
