@@ -12,9 +12,9 @@ module.exports = {
         "gold-light": "#FDF5E6", // A very light, creamy gold
         "gold-medium": "#F3E5AB", // A classic light gold
         "gold-dark": "#C5B358", // A rich, darker gold
-        "sand-light": "#F5F5DC", // A light, warm sand color
-        "sand-medium": "#E7D8C5", // A medium, slightly darker sand
-        "sand-dark": "#D2B48C",
+        "sand-light": "#F1F1F1", // A light, warm sand color
+        "sand-medium": "#EAE6DD", // A medium, slightly darker sand
+        "sand-dark": "#D4AB6C",
         fawn: "#D4AB6C",
         platinum: "#EAE6DD",
         "anti-flash": "#F1F1F1",
