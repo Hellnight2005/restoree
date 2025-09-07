@@ -6,92 +6,133 @@ import { CheckCircle, Clock, ArrowRight } from 'lucide-react'
 
 const ServicesPage = () => {
   const services = [
+    // New service based on the client's "Cleaning" category
     {
-      id: 'bags',
-      title: 'Bag Restoration',
-      description: 'Expert repair and restoration of luxury handbags and purses.',
+      id: 'cleaning',
+      title: 'Cleaning & Spa Treatments',
+      description: 'Give your luxury pieces a fresh lease on life. We specialize in professional sneaker and bag spa treatments, using premium, safe-grade products to remove dirt and stains while preserving the original finish.',
       process: [
-        'Assessment and condition evaluation',
-        'Leather cleaning and conditioning',
-        'Repair of tears and scratches',
-        'Hardware replacement if needed',
-        'Final polishing and protection'
+        'Thorough assessment and evaluation',
+        'Deep cleaning with specialized, brand-safe solutions',
+        'Gentle stain removal and spot treatment',
+        'Conditioning to restore suppleness',
+        'Final polishing and protective coating application'
       ],
-      benefits: ['Brand-safe methods', 'Original texture preserved', 'Premium aftercare'],
-      timeline: '5-7 days',
-      image: '/images/service-bags.jpg',
+      benefits: ['Brand-safe methods', 'Preserves original texture', 'Protects against future stains'],
+      timeline: '2-5 days',
+      image: '/images/service-cleaning.jpg',
       previewBefore: '/images/before-after-1.jpg',
       previewAfter: '/images/before-after-2.jpg'
     },
+    // Aligns with the client's "Restoration" category
     {
-      id: 'shoes',
-      title: 'Shoe Polishing',
-      description: 'Professional cleaning and polishing for all types of footwear.',
+      id: 'restoration',
+      title: 'Restoration',
+      description: 'Revive the old and renew the worn. Our restoration services breathe life back into well-loved sneakers, handbags, and leather goods, making your timeless pieces look and feel like new.',
       process: [
-        'Deep cleaning and stain removal',
-        'Leather conditioning and hydration',
-        'Color restoration and enhancement',
-        'Professional polishing',
-        'Protective coating application'
+        'Detailed material inspection',
+        'Correction of scuffs and abrasions',
+        'Precision patching for tears and holes',
+        'Surface refinishing for a seamless look',
+        'Protective sealing to prevent future damage'
       ],
-      benefits: ['Even color finish', 'High-shine or matte on request', 'Moisture protection'],
-      timeline: '2-3 days',
-      image: '/images/service-shoes.jpg',
+      benefits: ['Invisible mends', 'Restored structural integrity', 'Flawless aesthetic appearance'],
+      timeline: '4-7 days',
+      image: '/images/service-restoration.jpg',
       previewBefore: '/images/before-after-2.jpg',
       previewAfter: '/images/before-after-3.jpg'
     },
+    // Aligns with the client's "Re-Colouring" category
     {
-      id: 'leather',
-      title: 'Leather Repair',
-      description: 'Specialized repair for scuffs, tears, and worn panels across leather goods.',
+      id: 're-colouring',
+      title: 'Re-Colouring',
+      description: 'When colors fade, we bring them back to life. Using advanced methods and premium pigments, our re-colouring service restores vibrancy and uniformity to leather and fabric items.',
       process: [
-        'Material inspection and color matching',
-        'Edge and panel preparation',
-        'Precision patching and fill work',
-        'Surface refinishing',
-        'Protective sealing'
+        'Color analysis and swatching',
+        'Thorough surface preparation and masking',
+        'Expert application of layered pigment',
+        'Curing to ensure color durability',
+        'Finish selection (matte, satin, or gloss) and final protection'
       ],
-      benefits: ['Invisible mends', 'Color-accurate repairs', 'Structural integrity'],
+      benefits: ['Perfectly accurate color matching', 'Vibrant and long-lasting finish', 'Can transform an item’s look'],
       timeline: '4-6 days',
-      image: '/images/service-leather.jpg',
+      image: '/images/service-recolouring.jpg',
       previewBefore: '/images/before-after-3.jpg',
       previewAfter: '/images/before-after-1.jpg'
     },
+    // Aligns with the client's "Repairs" category
     {
-      id: 'hardware',
-      title: 'Hardware Replacement',
-      description: 'Sourcing and replacing zippers, buckles, rivets, feet, and chains.',
+      id: 'repairs',
+      title: 'Repairs',
+      description: 'Our craftsmen handle every detail with care, from stitching and zipper replacements to patching and sole repairs. We ensure your item remains both functionally strong and aesthetically flawless.',
       process: [
-        'Component identification',
-        'Sourcing brand-consistent parts',
-        'Precision removal and fitting',
-        'Finish matching and testing',
-        'Final polish and QC'
+        'Component identification and sourcing',
+        'Precision removal of damaged parts',
+        'Expert fitting of new components',
+        'Stitching and structural reinforcement',
+        'Durability testing to ensure smooth operation'
       ],
-      benefits: ['Smooth operation', 'Finish-matched parts', 'Durability tested'],
+      benefits: ['Smooth operation of hardware', 'Reinforced structural integrity', 'Finish-matched parts for a cohesive look'],
       timeline: '3-5 days',
-      image: '/images/service-hardware.jpg',
+      image: '/images/service-repairs.jpg',
       previewBefore: '/images/before-after-1.jpg',
       previewAfter: '/images/before-after-2.jpg'
     },
+    // New service for personalization
     {
-      id: 'color',
-      title: 'Color Restoration',
-      description: 'Reviving faded tones and correcting discoloration with advanced color lab work.',
+      id: 'personalisation',
+      title: 'Personalisation',
+      description: 'Make it uniquely yours. Our artists transform your essentials into true statement pieces by adding custom initials, designs, or monograms to sneakers and bags.',
       process: [
-        'Color analysis and swatching',
-        'Surface prep and masking',
-        'Layered pigment application',
-        'Finish selection (matte/satin/gloss)',
-        'Curing and protection'
+        'Consultation to discuss your vision',
+        'Creation of a custom design plan',
+        'Precision application of your chosen design',
+        'Finishing and sealing to ensure durability',
+        'Final quality check and delivery'
       ],
-      benefits: ['Accurate color matching', 'Even finish', 'Long-lasting protection'],
-      timeline: '4-6 days',
-      image: '/images/service-color.jpg',
+      benefits: ['Unique, one-of-a-kind items', 'Elevates your favorite brand', 'Reflects your personal style'],
+      timeline: '5-10 days',
+      image: '/images/service-personalisation.jpg',
       previewBefore: '/images/before-after-2.jpg',
       previewAfter: '/images/before-after-3.jpg'
-    }
-  ]
+    },
+    // New service for home furnishings
+    {
+      id: 'home',
+      title: 'Home Luxe Services',
+      description: 'Restoration and repair services for your designer home furniture—whether leather, suede, or bouclé. We restore elegance and durability to your interiors, ensuring your furniture retains its luxury finish.',
+      process: [
+        'On-site or in-studio assessment',
+        'Deep cleaning and stain removal',
+        'Repair of tears, scratches, and damage',
+        'Re-colouring and refinishing',
+        'Application of protective treatments'
+      ],
+      benefits: ['Restores elegance and comfort', 'Extends the life of your furniture', 'Saves you from costly replacement'],
+      timeline: 'Custom',
+      image: '/images/service-home.jpg',
+      previewBefore: '/images/before-after-3.jpg',
+      previewAfter: '/images/before-after-1.jpg'
+    },
+    // New service for car interiors
+    {
+      id: 'luxe-drive',
+      title: 'Luxe Drive Services',
+      description: 'Redefining car luxury care. Our automobile services specialize in the restoration and repair of interior leather and fabric finishes, ensuring your car’s interior reflects premium care.',
+      process: [
+        'Detailed interior assessment',
+        'Repair of seat tears and scuffs',
+        'Reviving faded colors and textures',
+        'Complete re-colouring for a new look',
+        'Protective finish application'
+      ],
+      benefits: ['Restores a premium look and feel', 'Increases your vehicle’s value', 'Protects against wear and tear'],
+      timeline: 'Custom',
+      image: '/images/service-luxe-drive.jpg',
+      previewBefore: '/images/before-after-1.jpg',
+      previewAfter: '/images/before-after-2.jpg'
+    },
+  ];
 
   const listVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -108,7 +149,7 @@ const ServicesPage = () => {
       {/* Hero Section */}
       <section className="relative h-96 md:h-[500px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
         <div className="absolute inset-0 z-0">
-          <div 
+          <div
             className="w-full h-full bg-cover bg-center bg-no-repeat opacity-30"
             style={{
               backgroundImage: "url('/images/hero-bg.jpg')"
@@ -116,7 +157,7 @@ const ServicesPage = () => {
           />
           <div className="absolute inset-0 bg-black/40" />
         </div>
-        
+
         <div className="relative z-10 text-center text-white px-4">
           <motion.h1
             className="font-copperplate text-5xl md:text-7xl font-bold mb-6"
@@ -138,15 +179,14 @@ const ServicesPage = () => {
       </section>
 
       {/* Services List */}
-      <section className="section-padding bg-white dark:bg-dark-bg">
+      <section className="section-padding bg-sand-medium dark:bg-dark-bg">
         <div className="container-custom">
           <div className="space-y-20">
             {services.map((service, index) => (
               <motion.div
                 key={service.id}
-                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${
-                  index % 2 === 0 ? '' : 'lg:grid-flow-col-dense'
-                }`}
+                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${index % 2 === 0 ? '' : 'lg:grid-flow-col-dense'
+                  }`}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -159,7 +199,7 @@ const ServicesPage = () => {
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: 'spring', stiffness: 120, damping: 14 }}
                   >
-                    <div 
+                    <div
                       className="w-full h-full bg-cover bg-center"
                       style={{ backgroundImage: `url(${service.image})` }}
                     />
@@ -222,13 +262,13 @@ const ServicesPage = () => {
                   </motion.ul>
 
                   {/* Mini Before/After Preview */}
-                  <div className="mb-8">
+                  <div className="mb-8 p-4 rounded-xl border border-white border-opacity-50 shadow-lg">
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+                      <div className="rounded-xl overflow-hidden border border-black border-opacity-70 shadow-md">
                         <img src={service.previewBefore} alt={`${service.title} before`} className="w-full h-32 object-cover" />
                         <div className="px-3 py-1 text-xs text-gray-600 dark:text-gray-300 bg-anti-flash dark:bg-gray-800">Before</div>
                       </div>
-                      <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+                      <div className="rounded-xl overflow-hidden border border-black border-opacity-70 shadow-md">
                         <img src={service.previewAfter} alt={`${service.title} after`} className="w-full h-32 object-cover" />
                         <div className="px-3 py-1 text-xs text-gray-600 dark:text-gray-300 bg-anti-flash dark:bg-gray-800">After</div>
                       </div>
