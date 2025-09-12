@@ -292,7 +292,7 @@ const ServicesPage = () => {
 
                       {/* Chat on WhatsApp Button */}
                       <motion.div whileHover={{ x: 2 }}>
-                        <a
+                        <motion.a
                           href={whatsappLink}
                           className="btn-secondary text-lg px-8 py-4 inline-flex items-center justify-center gap-2"
                           whileHover={{ scale: 1.05 }}
@@ -302,7 +302,7 @@ const ServicesPage = () => {
                         >
                           <MessageCircle className="w-5 h-5" />
                           Chat
-                        </a>
+                        </motion.a>
                       </motion.div>
                     </div>
                   </div>
