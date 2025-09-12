@@ -1,9 +1,10 @@
-// components/TermsContent .tsx
+// components/TermsContent.tsx
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import { ScrollText, Settings, Users, CreditCard, ShieldCheck, Paintbrush, XCircle, ShieldHalf, Lock } from 'lucide-react';
 
 // Register ScrollTrigger plugin (required for scroll-based animations)
 gsap.registerPlugin(ScrollTrigger);
@@ -90,14 +91,16 @@ const TermsContent = () => {
                         Terms & Conditions
                     </h1>
 
-                    <div className="grid md:grid-cols-2 gap-8">
+                    {/* This div now uses vertical spacing instead of a grid layout */}
+                    <div className="space-y-8">
                         {/* Section 1: General */}
                         <section
                             ref={sectionRefs}
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                📜&nbsp;1. General
+                                <ScrollText className="w-8 h-8 mr-2" />
+                                1. General
                             </h2>
                             <p className="text-lg leading-relaxed text-gray-800 dark:text-platinum">
                                 Welcome to Réstorée. By accessing or using our website and services, you agree to comply with and be bound by the following Terms & Conditions. Please read them carefully before engaging with our services.
@@ -110,7 +113,8 @@ const TermsContent = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                🛠️&nbsp;2. Services
+                                <Settings className="w-8 h-8 mr-2" />
+                                2. Services
                             </h2>
                             <ul className="list-disc list-inside space-y-2 text-lg text-gray-800 dark:text-platinum">
                                 <li>Réstorée specializes in cleaning, restoration, re-colouring, repair, personalisation, and care for sneakers, bags, leather goods, furniture, and automobile interiors.</li>
@@ -125,7 +129,8 @@ const TermsContent = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                🤝&nbsp;3. Customer Responsibility
+                                <Users className="w-8 h-8 mr-2" />
+                                3. Customer Responsibility
                             </h2>
                             <ul className="list-disc list-inside space-y-2 text-lg text-gray-800 dark:text-platinum">
                                 <li>Customers are responsible for providing accurate information regarding the condition of items.</li>
@@ -140,7 +145,8 @@ const TermsContent = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                💳&nbsp;4. Payments & Pricing
+                                <CreditCard className="w-8 h-8 mr-2" />
+                                4. Payments & Pricing
                             </h2>
                             <ul className="list-disc list-inside space-y-2 text-lg text-gray-800 dark:text-platinum">
                                 <li>Prices for services will be provided prior to acceptance of an item.</li>
@@ -155,11 +161,12 @@ const TermsContent = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                ⚖️&nbsp;5. Liability
+                                <ShieldCheck className="w-8 h-8 mr-2" />
+                                5. Liability
                             </h2>
                             <ul className="list-disc list-inside space-y-2 text-lg text-gray-800 dark:text-platinum">
                                 <li>While every care is taken, Réstorée cannot be held liable for:
-                                    <ul className="list-circle list-inside ml-8 space-y-2">
+                                    <ul className="list-disc list-inside ml-8 space-y-2">
                                         <li>Natural wear and tear or age-related deterioration.</li>
                                         <li>Color variations due to fabric/leather limitations.</li>
                                         <li>Accessories/materials that react unpredictably to cleaning/restoration processes.</li>
@@ -175,7 +182,8 @@ const TermsContent = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                🎨&nbsp;6. Personalisation Services
+                                <Paintbrush className="w-8 h-8 mr-2" />
+                                6. Personalisation Services
                             </h2>
                             <ul className="list-disc list-inside space-y-2 text-lg text-gray-800 dark:text-platinum">
                                 <li>Personalisation (e.g., monograms, anime characters, custom designs) is carried out based on customer approval.</li>
@@ -189,7 +197,8 @@ const TermsContent = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                ❌&nbsp;7. Cancellations & Refunds
+                                <XCircle className="w-8 h-8 mr-2" />
+                                7. Cancellations & Refunds
                             </h2>
                             <ul className="list-disc list-inside space-y-2 text-lg text-gray-800 dark:text-platinum">
                                 <li>Cancellation requests must be made within 24 hours of placing a service order.</li>
@@ -204,7 +213,8 @@ const TermsContent = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                🧠&nbsp;8. Intellectual Property
+                                <ShieldHalf className="w-8 h-8 mr-2" />
+                                8. Intellectual Property
                             </h2>
                             <p className="text-lg leading-relaxed text-gray-800 dark:text-platinum">
                                 All content, logos, and designs displayed on Réstorée’s website remain the intellectual property of Restoree and cannot be copied, reproduced, or used without written permission.
@@ -217,7 +227,8 @@ const TermsContent = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                🔒&nbsp;9. Privacy & Data Protection
+                                <Lock className="w-8 h-8 mr-2" />
+                                9. Privacy & Data Protection
                             </h2>
                             <ul className="list-disc list-inside space-y-2 text-lg text-gray-800 dark:text-platinum">
                                 <li>Customer details provided to Restoree are used solely for service delivery and communication purposes.</li>

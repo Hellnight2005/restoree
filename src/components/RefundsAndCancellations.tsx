@@ -4,6 +4,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+// Import Lucide-React icons
+import { XCircle, DollarSign, Paintbrush, ShieldHalf, Box } from 'lucide-react';
+
 
 // Register ScrollTrigger plugin (required for scroll-based animations)
 gsap.registerPlugin(ScrollTrigger);
@@ -89,15 +92,15 @@ const RefundsAndCancellations = () => {
                         Refund & Cancellation Policy
                     </h1>
 
-                    {/* Removed grid layout to make sections full width */}
-                    <div className="space-y-8"> {/* Added space-y-8 for vertical spacing */}
+                    <div className="space-y-8">
                         {/* Section 1: Cancellations */}
                         <section
                             ref={sectionRefs}
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                ❌&nbsp;1. Cancellations
+                                <XCircle className="w-8 h-8 mr-2" /> {/* Changed icon */}
+                                1. Cancellations
                             </h2>
                             <ul className="list-disc list-inside space-y-2 text-lg text-gray-800 dark:text-platinum">
                                 <li>Customers may cancel a service request within **24 hours** of placing the order.</li>
@@ -112,7 +115,8 @@ const RefundsAndCancellations = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                💰&nbsp;2. Refunds
+                                <DollarSign className="w-8 h-8 mr-2" /> {/* Changed icon */}
+                                2. Refunds
                             </h2>
                             <ul className="list-disc list-inside space-y-2 text-lg text-gray-800 dark:text-platinum">
                                 <li>Services are non-refundable once work has started, as each process involves customised treatments.</li>
@@ -127,7 +131,8 @@ const RefundsAndCancellations = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                🎨&nbsp;3. Personalisation Services
+                                <Paintbrush className="w-8 h-8 mr-2" /> {/* Changed icon */}
+                                3. Personalisation Services
                             </h2>
                             <ul className="list-disc list-inside space-y-2 text-lg text-gray-800 dark:text-platinum">
                                 <li>Personalised items are non-cancellable and non-refundable once approved by the customer.</li>
@@ -141,7 +146,8 @@ const RefundsAndCancellations = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                🛡️&nbsp;4. Quality Assurance & Liability
+                                <ShieldHalf className="w-8 h-8 mr-2" /> {/* Changed icon */}
+                                4. Quality Assurance & Liability
                             </h2>
                             <ul className="list-disc list-inside space-y-2 text-lg text-gray-800 dark:text-platinum">
                                 <li>Réstorée ensures all services are carried out by trained professionals.</li>
@@ -157,7 +163,8 @@ const RefundsAndCancellations = () => {
                             className="bg-sand-medium dark:bg-dark-card p-8 rounded-lg shadow-md border-t-4 border-fawn dark:border-gold-medium transition-colors duration-300"
                         >
                             <h2 className="text-3xl font-semibold mb-4 text-fawn dark:text-gold-medium flex items-center">
-                                📦&nbsp;5. Uncollected Items
+                                <Box className="w-8 h-8 mr-2" /> {/* Changed icon */}
+                                5. Uncollected Items
                             </h2>
                             <p className="text-lg leading-relaxed text-gray-800 dark:text-platinum">
                                 Customers must collect their items within <strong>30 days </strong> of service completion.
