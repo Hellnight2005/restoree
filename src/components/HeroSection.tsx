@@ -9,18 +9,31 @@ import Cookies from 'js-cookie'
 
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null)
-  const headlineRef = useRef<HTMLHeadingElement>(null)
+  const headlineRef = useRef<HTMLDivElement>(null) // Changed to div
   const subheadlineRef = useRef<HTMLParagraphElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate headline with stagger effect
+      // Split the headline into two lines
+      const mainText = "Réstorée"
+      const subText = "Luxury care, redefined"
+      const firstLineChars = mainText.split('')
+      const secondLineChars = subText.split('')
+
       if (headlineRef.current) {
-        const chars = headlineRef.current.textContent?.split('') || []
-        headlineRef.current.innerHTML = chars.map(char =>
-          char === ' ' ? ' ' : `<span class="char">${char}</span>`
-        ).join('')
+        headlineRef.current.innerHTML = `
+          <h1 class="font-copperplate text-5xl md:text-7xl lg:text-8xl font-bold leading-tight">
+            ${firstLineChars.map(char =>
+          char === ' ' ? ' ' : `<span class="char inline-block">${char}</span>`
+        ).join('')}
+          </h1>
+          <p class="font-copperplate text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mt-2">
+            ${secondLineChars.map(char =>
+          char === ' ' ? ' ' : `<span class="char inline-block">${char}</span>`
+        ).join('')}
+          </p>
+        `
 
         gsap.fromTo('.char',
           { opacity: 0, y: 50 },
@@ -97,14 +110,12 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-        <motion.h1
-          ref={headlineRef}
-          className="font-copperplate text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          Revive Your Vibe
-        </motion.h1>
+        <div ref={headlineRef} className="mb-6">
+          {/* Initial content here is a placeholder */}
+          <h1 className="font-copperplate text-5xl md:text-7xl lg:text-8xl font-bold leading-tight">
+            Réstorée: Luxury care, redefined
+          </h1>
+        </div>
 
         <motion.p
           ref={subheadlineRef}

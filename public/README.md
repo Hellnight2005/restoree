@@ -69,3 +69,5 @@ Place any video files in the `videos/` folder. Supported formats:
 - Consider creating multiple sizes for responsive design
 - Use descriptive filenames for better organization
 - Keep file sizes reasonable for fast loading
+
+

@@ -75,3 +75,5 @@ After replacing all images:
 2. Check responsive behavior on different screen sizes
 3. Optimize any images that seem too large or slow
 4. Consider adding alt text descriptions for accessibility
+
+

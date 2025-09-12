@@ -22,9 +22,11 @@ const Footer = () => {
     ],
     support: [
       { name: 'FAQ', href: '/faq' },
-      { name: 'Shipping Policy', href: '/shipping' },
-      { name: 'Return Policy', href: '/returns' },
-      { name: 'Privacy Policy', href: '/privacy' },
+      // { name: 'Shipping Policy', href: '/shipping' },
+      { name: 'Terms & Conditions', href: '/TermsAndConditions' },
+      { name: 'Shipping & Delivery Policy', href: '/shipping' },
+      { name: 'Refund & Cancellation Policy', href: '/returns' },
+
     ],
   }
 
@@ -173,9 +175,9 @@ const Footer = () => {
             })}
           </div>
           {/* Slogan - Centered */}
-          <p className="text-fawn font-copperplate font-semibold text-lg text-center md:flex-grow">
+          {/* <p className="text-fawn font-copperplate font-semibold text-lg text-center md:flex-grow">
             Réstorée: Luxury care, redefined.
-          </p>
+          </p> */}
           {/* Copyright - Right aligned */}
           <p className="text-center md:text-right w-full md:w-auto md:flex-initial">© {currentYear} Réstorée. All rights reserved.</p>
         </div>
