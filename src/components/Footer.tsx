@@ -15,26 +15,26 @@ const Footer = () => {
       { name: 'Hardware Replacement', href: '/services#hardware' },
     ],
     company: [
-      { name: 'About Us', href: '/about' },
       { name: 'Our Process', href: '/about#process' },
       { name: 'Gallery', href: '/gallery' },
       { name: 'Contact', href: '/contact' },
+      { name: 'About Us', href: '/about' },
     ],
     support: [
-      { name: 'FAQ', href: '/faq' },
-      // { name: 'Shipping Policy', href: '/shipping' },
       { name: 'Terms & Conditions', href: '/TermsAndConditions' },
       { name: 'Shipping & Delivery Policy', href: '/shipping' },
       { name: 'Refund & Cancellation Policy', href: '/returns' },
+      { name: 'FAQ', href: '/faq' },
+      // { name: 'Shipping Policy', href: '/shipping' },
 
     ],
   }
 
   const socialLinks = [
+    { name: 'YouTube', icon: Youtube, href: '#' },
     { name: 'Instagram', icon: Instagram, href: '#' },
     { name: 'LinkedIn', icon: Linkedin, href: '#' },
-    { name: 'WhatsApp', icon: MessageCircle, href: '#' }, // Using MessageCircle as an alternative
-    { name: 'YouTube', icon: Youtube, href: '#' },
+    // { name: 'WhatsApp', icon: MessageCircle, href: '#' }, // Using MessageCircle as an alternative
   ]
 
   return (

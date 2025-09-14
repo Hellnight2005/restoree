@@ -7,6 +7,7 @@ import { ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 import Cookies from 'js-cookie'
 
+
 const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null)
   const headlineRef = useRef<HTMLDivElement>(null) // Changed to div
@@ -182,6 +183,8 @@ const HeroSection = () => {
         }} />
       </div>
     </section>
+
+
   )
 }
 

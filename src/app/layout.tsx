@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { AppStateProvider } from '@/components/AppStateProvider'
+import WhatsAppButton from '@/components/WhatsAppButton' // 👈 Add this import
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
   },
   icons: {
-    icon: '/favicon.png', // This is the path to your favicon file
+    icon: '/favicon.png',
   },
 }
 
@@ -45,6 +46,9 @@ export default function RootLayout({
                 {children}
               </main>
               <Footer />
+              {/* 👈 Place the WhatsAppButton component here */}
+              <WhatsAppButton
+              />
             </div>
           </AppStateProvider>
         </ThemeProvider>
