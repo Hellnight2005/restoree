@@ -92,13 +92,17 @@ const Header = () => {
       <div className="container-custom">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
+          {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-fawn rounded-full flex items-center justify-center">
-              <span className="text-white font-copperplate font-bold text-lg">R</span>
-            </div>
-            <span className="font-copperplate text-xl font-bold text-fawn">
+            <img
+              src="images/logo.png" // Replace with the actual path to your logo image
+              alt="Réstorée Logo"
+              className="w-10 h-10 rounded-full"
+            />
+            {/* <span className="font-copperplate text-xl font-bold text-fawn">
               Réstorée
-            </span>
+            </span> */}
+
           </Link>
 
           {/* Desktop Navigation */}

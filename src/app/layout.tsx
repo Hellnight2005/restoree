@@ -19,6 +19,9 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
   },
+  icons: {
+    icon: '/favicon.png', // This is the path to your favicon file
+  },
 }
 
 export default function RootLayout({
