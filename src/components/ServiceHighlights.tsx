@@ -202,7 +202,7 @@ const ServiceHighlights = () => {
           ))}
         </div>
 
-        {/* Carousel Navigation */}
+        {/* Carousel Navigation
         <div className="flex justify-center items-center space-x-4">
           <motion.button
             onClick={prevService}
@@ -234,7 +234,7 @@ const ServiceHighlights = () => {
           >
             →
           </motion.button>
-        </div>
+        </div> */}
       </div>
     </section>
   )
