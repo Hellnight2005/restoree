@@ -17,7 +17,8 @@ const AdminDashboardWrapper = () => {
     if (profileCookie) {
       try {
         const profile = JSON.parse(profileCookie)
-        if (profile.role === 'admin' && profile.id) {
+        console.log('Parsed profile from cookie:', profile)
+        if (profile.role === 'admin') {
           setIsAdmin(true)
         } else {
           router.push('/') // Redirect to login if not an admin
