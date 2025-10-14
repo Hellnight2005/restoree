@@ -55,12 +55,12 @@ const Header = () => {
     { name: 'Services', href: '/services', role: 'public' },
     { name: 'Gallery', href: '/gallery', role: 'public' },
     { name: 'Contact', href: '/contact', role: 'public' },
-    { name: 'Clerk', href: '/blog', role: 'public' },
+    // { name: 'Clerk', href: '/blog', role: 'public' },
 
     // { name: 'Blog', href: '/blog', role: 'public' },
     { name: 'Dashboard', href: '/admin', role: 'admin' },
-    { name: 'Services', href: '/admin', role: 'admin' },
-    { name: 'Blog', href: '/admin', role: 'admin' },
+    { name: 'Services', href: '/admin/services', role: 'admin' },
+    // { name: 'Blog', href: '/admin', role: 'admin' },
   ];
 
   const getFilteredNavItems = (userRole: string | null) => {
