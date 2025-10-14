@@ -1,12 +1,8 @@
 import { NextResponse } from "next/server";
 import { connectToDb } from "@/lib/db";
 import Blog from "@/models/Blog";
-// *** NEW FIX: Import the Cloudinary SDK directly and remove external dependency ***
 import { v2 as cloudinary } from "cloudinary";
 
-// Cloudinary Configuration
-// This setup relies on the following environment variables:
-// CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -14,25 +10,14 @@ cloudinary.config({
   secure: true,
 });
 
-/**
- * Uploads a buffer to Cloudinary.
- * @param {Buffer} buffer - The image data as a Buffer.
- * @param {string} fileName - The desired file name (used for public_id).
- * @param {string} _folderId - This argument is ignored, as the folder is set in the options below.
- * @param {string} mimeType - The MIME type of the file.
- * @returns {Promise<string>} The secure URL of the uploaded file.
- */
 async function uploadMedia(buffer, fileName, _folderId, mimeType) {
-  // Cloudinary reliably accepts a Base64 data URI string for uploads
   const dataUri = `data:${mimeType};base64,${buffer.toString("base64")}`;
 
   console.log("Uploading file to Cloudinary:", fileName);
 
   try {
     const result = await cloudinary.uploader.upload(dataUri, {
-      // Set the public ID to the file name (without extension)
       public_id: fileName.replace(/\.[^/.]+$/, ""),
-      // All blog images will be stored in this specific folder in your Cloudinary account
       folder: "blog_uploads",
       overwrite: true,
       resource_type: "auto",
@@ -50,23 +35,14 @@ async function uploadMedia(buffer, fileName, _folderId, mimeType) {
   }
 }
 
-export const config = {
-  api: {
-    bodyParser: false, // disable Next.js default parser for handling file uploads
-  },
-};
-
-// Helper to convert file to buffer
 async function fileToBuffer(file) {
   return Buffer.from(await file.arrayBuffer());
 }
 
 export async function POST(req) {
   try {
-    // === 1. Connect to Database ===
     await connectToDb();
 
-    // Read multipart/form-data
     const formData = await req.formData();
     const title = formData.get("title");
     const slug = formData.get("slug");
@@ -74,7 +50,6 @@ export async function POST(req) {
     const published = formData.get("published");
     const tags = formData.get("tags") ? JSON.parse(formData.get("tags")) : [];
 
-    // Validation checks... (omitted for brevity)
     if (!title || title.trim().length < 5)
       return NextResponse.json(
         { error: "Title must be at least 5 characters." },
@@ -96,7 +71,6 @@ export async function POST(req) {
         { status: 400 }
       );
 
-    // === 2. Check for Duplicate Slug ===
     const exists = await Blog.findOne({ slug });
     if (exists)
       return NextResponse.json(
@@ -104,7 +78,6 @@ export async function POST(req) {
         { status: 400 }
       );
 
-    // --- Cloudinary Upload Logic ---
     let imageUrl = "";
     const coverImageFile = formData.get("coverImage");
 
@@ -112,7 +85,6 @@ export async function POST(req) {
       const buffer = await fileToBuffer(coverImageFile);
       const ext = coverImageFile.name.split(".").pop();
 
-      // Call the locally defined function 'uploadMedia'
       imageUrl = await uploadMedia(
         buffer,
         `${slug}-cover.${ext}`,
@@ -121,14 +93,12 @@ export async function POST(req) {
       );
     }
 
-    // === 3. Create Blog in MongoDB ===
     const blog = await Blog.create({
       title: title.trim(),
       slug: slug.trim(),
       content: content.trim(),
       coverImage: imageUrl,
       tags: tags || [],
-      // Ensure 'published' is a boolean
       published: published === "true" || published === true,
     });
 
