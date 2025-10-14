@@ -1,11 +1,17 @@
 "use client"
 
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
+import Cookies from 'js-cookie'
 import { useAppState } from '@/components/AppStateProvider'
 
 export default function AdminServicesPage() {
-  const { isAdmin, services, blockedDates, blockedTimes, setBlockedDates, setBlockedTimes } = useAppState()
+
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  const { services, blockedDates, blockedTimes, setBlockedDates, setBlockedTimes } = useAppState()
   const [localServices, setLocalServices] = useState(services)
   const [form, setForm] = useState({
     id: '', title: '', description: '', price: '', estimatedDuration: '', image: ''
@@ -13,17 +19,35 @@ export default function AdminServicesPage() {
   const [preview, setPreview] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement | null>(null)
 
-  if (!isAdmin) {
+  useEffect(() => {
+    const profileCookie = Cookies.get('profile')
+
+    if (profileCookie) {
+      try {
+        const profile = JSON.parse(profileCookie)
+        console.log('Parsed profile from cookie:', profile)
+        if (profile.role !== 'admin') {
+          router.push('/')
+        }
+      } catch (error) {
+        console.error('Failed to parse profile cookie:', error)
+        router.push('/')
+      }
+    } else {
+      router.push('/')
+    }
+    setLoading(false)
+  }, [router])
+
+
+  if (loading) {
     return (
       <div className="min-h-screen section-padding">
-        <div className="container-custom">
-          <div className="card p-8 max-w-lg mx-auto text-center">
-            <h1 className="font-copperplate text-3xl font-bold mb-4">Access Denied</h1>
-            <p className="text-gray-600 dark:text-gray-300">You must be an admin to view this page.</p>
-          </div>
+        <div className="container-custom py-20 text-center">
+          <h1 className="text-2xl font-copperplate">Checking Permissions...</h1>
         </div>
       </div>
-    )
+    );
   }
 
   const addOrUpdate = () => {
@@ -132,7 +156,3 @@ export default function AdminServicesPage() {
     </div>
   )
 }
-
-
-
-
