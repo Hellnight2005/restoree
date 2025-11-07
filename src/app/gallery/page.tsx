@@ -8,37 +8,37 @@ const GalleryPage = () => {
       id: 1,
       title: 'Luxury Bag Restoration',
       category: 'Bags',
-      image: '/images/gallery-1.jpg'
+      image: '/images/main_resto.jpg'
     },
     {
       id: 2,
       title: 'Designer Shoe Revival',
       category: 'Shoes',
-      image: '/images/gallery-2.jpg'
+      image: '/images/after_recolor.jpg'
     },
     {
       id: 3,
       title: 'Leather Jacket Transformation',
       category: 'Leather',
-      image: '/images/gallery-3.jpg'
+      image: '/images/Leather_tran.jpg'
     },
     {
       id: 4,
       title: 'Vintage Purse Restoration',
       category: 'Bags',
-      image: '/images/gallery-4.jpg'
+      image: '/images/purse.jpg'
     },
     {
       id: 5,
-      title: 'Boot Polish & Care',
-      category: 'Shoes',
-      image: '/images/gallery-5.jpg'
+      title: ' Leather belt Restoration',
+      category: 'Leather',
+      image: '/images/belt.jpg'
     },
     {
       id: 6,
-      title: 'Leather Wallet Repair',
+      title: 'Leather bag Repair',
       category: 'Leather',
-      image: '/images/gallery-6.jpg'
+      image: '/images/baf_after.jpg'
     }
   ]
 
@@ -49,7 +49,7 @@ const GalleryPage = () => {
       {/* Hero Section */}
       <section className="relative h-96 md:h-[500px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
         <div className="absolute inset-0 z-0">
-          <div 
+          <div
             className="w-full h-full bg-cover bg-center bg-no-repeat opacity-30"
             style={{
               backgroundImage: "url('/images/hero-bg.jpg')"
@@ -57,7 +57,7 @@ const GalleryPage = () => {
           />
           <div className="absolute inset-0 bg-black/40" />
         </div>
-        
+
         <div className="relative z-10 text-center text-white px-4">
           <motion.h1
             className="font-copperplate text-5xl md:text-7xl font-bold mb-6"
@@ -114,12 +114,12 @@ const GalleryPage = () => {
                 whileHover={{ y: -10 }}
               >
                 <div className="relative overflow-hidden rounded-2xl shadow-lg">
-                  <div 
+                  <div
                     className="w-full h-80 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                     style={{ backgroundImage: `url(${item.image})` }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
+
                   {/* Overlay Content */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <div className="text-sm text-fawn font-medium mb-2">
@@ -138,7 +138,7 @@ const GalleryPage = () => {
           </div>
 
           {/* Load More Button */}
-          <motion.div
+          {/* <motion.div
             className="text-center mt-16"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -152,7 +152,7 @@ const GalleryPage = () => {
             >
               Load More Work
             </motion.button>
-          </motion.div>
+          </motion.div> */}
         </div>
       </section>
     </div>

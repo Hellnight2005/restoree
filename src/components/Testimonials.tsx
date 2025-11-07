@@ -16,8 +16,7 @@ const testimonials = [
     title: 'Luxury Handbag Collector',
     quote:
       'Absolutely loved the work they did on my shoes. Most cleaners and laundries refused to take my shoes cause they were suede, then I found The laundry company, and they were a total God sent. From picking my shoes up, cleaning them so they look better than brand new and delivering the shoes back to me, they were all together highly professional.',
-    avatar:
-      '/images/avatar-1.jpg',
+
     rating: 5,
   },
   {
@@ -25,8 +24,7 @@ const testimonials = [
     title: 'Designer Shoe Enthusiast',
     quote:
       'My shoes that went through a month of rigourous marathon training and monsoon runs, came back spick and span; completely brand new. Loved the service. With smooth pick up and drop, very reasonably priced. Would definitely recommend it to everyone!',
-    avatar:
-      '/images/avatar-2.jpg',
+
     rating: 5,
   },
   {
@@ -34,8 +32,7 @@ const testimonials = [
     title: 'Stylist',
     quote:
       'I’m currently visiting India and heading back tomorrow after an intense travel schedule that left my brand new shoes looking worn out. The Laundry Company was a lifesaver! My shoes had taken quite a beating during my hectic travels, but within just 48 hours, they picked them up and returned them looking as good as new.  Despite my travel, their communication made everything smooth and stress-free. Plus, the pricing was very reasonable, making it a great value for the quality and convenience they provided. ',
-    avatar:
-      '/images/avatar-3.jpg',
+
     rating: 4,
   },
 ]
@@ -110,10 +107,10 @@ const Testimonials = () => {
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-4">
-                  <div
+                  {/* <div
                     className="w-12 h-12 rounded-full bg-cover bg-center ring-2 ring-blue-500 ring-offset-2 ring-offset-white dark:ring-offset-gray-800"
                     style={{ backgroundImage: `url(${t.avatar})` }}
-                  />
+                  /> */}
                   <div>
                     <p className="font-semibold text-gray-900 dark:text-white">{t.name}</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">{t.title}</p>

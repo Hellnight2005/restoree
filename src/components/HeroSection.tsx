@@ -99,12 +99,13 @@ const HeroSection = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
     >
       {/* Background Image/Video */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-2">
         <div
-          className="w-full h-full bg-cover bg-center bg-no-repeat opacity-40"
+          className="w-full h-full bg-cover bg-center bg-no-repeat opacity-50"
           style={{
-            backgroundImage: "url('/images/hero-bg.jpg')"
+            backgroundImage: "url('/images/hero.jpg')",
           }}
+
         />
         <div className="absolute inset-0 bg-black/30" />
       </div>

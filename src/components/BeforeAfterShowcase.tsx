@@ -14,23 +14,23 @@ const beforeAfterItems = [
   {
     id: 1,
     title: 'Luxury Handbag Restoration',
-    before: '/images/before-after-1.jpg',
-    after: '/images/before-after-2.jpg',
+    before: '/images/bag_befor.jpg',
+    after: '/images/baf_after.jpg',
     description: 'Complete restoration of a vintage Chanel bag, including leather repair and hardware replacement.'
   },
   {
     id: 2,
     title: 'Designer Shoe Revival',
-    before: '/images/before-after-2.jpg',
-    after: '/images/before-after-3.jpg',
+    before: '/images/befor_recolor.jpg',
+    after: '/images/after_recolor.jpg',
     description: 'Deep cleaning and polishing of luxury leather shoes, restoring their original shine and beauty.'
   },
   {
     id: 3,
-    title: 'Leather Jacket Transformation',
-    before: '/images/before-after-3.jpg',
-    after: '/images/before-after-1.jpg',
-    description: 'Comprehensive leather repair and conditioning, bringing new life to a vintage leather jacket.'
+    title: 'Leather bag Transformation',
+    before: '/images/restor_befor.JPG',
+    after: '/images/resto_after.JPG',
+    description: 'Comprehensive leather repair and conditioning, bringing new life to a vintage leather bag.'
   }
 ]
 
@@ -66,13 +66,13 @@ const BeforeAfterShowcase = () => {
   const handleDragEnd = (event: any, info: PanInfo) => {
     setIsDragging(false)
     const threshold = 100
-    
+
     if (info.offset.x > threshold && activeItem > 0) {
       setActiveItem(activeItem - 1)
     } else if (info.offset.x < -threshold && activeItem < beforeAfterItems.length - 1) {
       setActiveItem(activeItem + 1)
     }
-    
+
     x.set(0)
   }
 
@@ -85,7 +85,7 @@ const BeforeAfterShowcase = () => {
   }
 
   return (
-    <section 
+    <section
       ref={sectionRef}
       className="section-padding bg-white dark:bg-dark-bg"
     >
@@ -130,7 +130,7 @@ const BeforeAfterShowcase = () => {
                   >
                     {/* Before Image */}
                     <div className="w-1/2 relative">
-                      <div 
+                      <div
                         className="w-full h-full bg-cover bg-center"
                         style={{ backgroundImage: `url(${item.before})` }}
                       />
@@ -141,7 +141,7 @@ const BeforeAfterShowcase = () => {
 
                     {/* After Image */}
                     <div className="w-1/2 relative">
-                      <div 
+                      <div
                         className="w-full h-full bg-cover bg-center"
                         style={{ backgroundImage: `url(${item.after})` }}
                       />
@@ -203,17 +203,16 @@ const BeforeAfterShowcase = () => {
             >
               ←
             </motion.button>
-            
+
             <div className="flex space-x-2">
               {beforeAfterItems.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setActiveItem(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === activeItem 
-                      ? 'bg-fawn scale-125' 
-                      : 'bg-gray-300 dark:bg-gray-600'
-                  }`}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${index === activeItem
+                    ? 'bg-fawn scale-125'
+                    : 'bg-gray-300 dark:bg-gray-600'
+                    }`}
                 />
               ))}
             </div>

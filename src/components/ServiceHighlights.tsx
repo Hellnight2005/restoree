@@ -15,52 +15,52 @@ const services = [
   {
     id: 'bags',
     title: 'Bag Restoration',
-    icon: ShoppingBag,
+    // icon: ShoppingBag,
     summary: 'Expert repair and restoration of luxury handbags and purses',
     description: 'From leather conditioning to hardware replacement, we restore your favorite bags to their former glory.',
-    image: '/images/service-bags.jpg',
-    before_image: '/images/before-bag.jpg',
-    after_image: '/images/after-bag.jpg'
+    image: '/images/bag_cover.jpg',
+    before_image: '/images/bag_befor.jpg',
+    after_image: '/images/baf_after.jpg'
   },
-  {
-    id: 'shoes',
-    title: 'Shoe Polishing',
-    icon: Sparkles,
-    summary: 'Professional cleaning and polishing for all types of footwear',
-    description: 'Deep cleaning, conditioning, and polishing to make your shoes look brand new again.',
-    image: '/images/service-shoes.jpg',
-    before_image: '/images/before-shoe.jpg',
-    after_image: '/images/after-shoe.jpg'
-  },
+  // {
+  //   id: 'shoes',
+  //   title: 'Shoe Polishing',
+  //   icon: Sparkles,
+  //   summary: 'Professional cleaning and polishing for all types of footwear',
+  //   description: 'Deep cleaning, conditioning, and polishing to make your shoes look brand new again.',
+  //   image: '/images/service-shoes.jpg',
+  //   before_image: '/images/before-shoe.jpg',
+  //   after_image: '/images/after-shoe.jpg'
+  // },
   {
     id: 'leather',
     title: 'Leather Repair',
-    icon: Scissors,
+    // icon: Scissors,
     summary: 'Comprehensive leather restoration and repair services',
     description: 'Fix tears, scratches, and wear with our specialized leather repair techniques.',
     image: '/images/service-leather.jpg',
-    before_image: '/images/before-leather.jpg',
-    after_image: '/images/after-leather.jpg'
+    before_image: '/images/restor_befor.JPG',
+    after_image: '/images/resto_after.JPG'
   },
-  {
-    id: 'hardware',
-    title: 'Hardware Replacement',
-    icon: Settings,
-    summary: 'Replace and restore zippers, buckles, and metal components',
-    description: 'Professional hardware replacement to ensure your items function perfectly.',
-    image: '/images/service-hardware.jpg',
-    before_image: '/images/before-hardware.jpg',
-    after_image: '/images/after-hardware.jpg'
-  },
+  // {
+  //   id: 'hardware',
+  //   title: 'Hardware Replacement',
+  //   icon: Settings,
+  //   summary: 'Replace and restore zippers, buckles, and metal components',
+  //   description: 'Professional hardware replacement to ensure your items function perfectly.',
+  //   image: '/images/service-hardware.jpg',
+  //   before_image: '/images/before-hardware.jpg',
+  //   after_image: '/images/after-hardware.jpg'
+  // },
   {
     id: 'color',
     title: 'Color Restoration',
-    icon: Palette,
+    // icon: Palette,
     summary: 'Restore and enhance original colors and finishes',
     description: 'Bring back the vibrant colors and finishes that make your items special.',
-    image: '/images/service-color.jpg',
-    before_image: '/images/before-color.jpg',
-    after_image: '/images/after-color.jpg'
+    image: '/images/main_recolor.jpg',
+    before_image: '/images/befor_recolor.jpg',
+    after_image: '/images/after_recolor.jpg'
   }
 ]
 
@@ -150,9 +150,9 @@ const ServiceHighlights = () => {
                       />
                     </div>
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                    <div className="absolute top-4 right-4 w-12 h-12 bg-fawn rounded-full flex items-center justify-center">
+                    {/* <div className="absolute top-4 right-4 w-12 h-12 bg-fawn rounded-full flex items-center justify-center">
                       {React.createElement(service.icon, { className: "w-6 h-6 text-white" })}
-                    </div>
+                    </div> */}
                   </div>
                 ) : (
                   <div className="relative h-48 overflow-hidden">
@@ -161,9 +161,9 @@ const ServiceHighlights = () => {
                       style={{ backgroundImage: `url(${service.image})` }}
                     />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-                    <div className="absolute top-4 right-4 w-12 h-12 bg-fawn rounded-full flex items-center justify-center">
+                    {/* <div className="absolute top-4 right-4 w-12 h-12 bg-fawn rounded-full flex items-center justify-center">
                       {React.createElement(service.icon, { className: "w-6 h-6 text-white" })}
-                    </div>
+                    </div> */}
                   </div>
                 )}
 

@@ -17,8 +17,8 @@ const services = [
       'Final polishing and protective coating application'
     ],
     benefits: ['Brand-safe methods', 'Preserves original texture', 'Protects against future stains'],
-    timeline: '2-5 days',
-    image: '/images/service-cleaning.jpg',
+    timeline: '5-7 days',
+    image: '/images/bag_cover.jpg',
     previewBefore: '/images/before-after-1.jpg',
     previewAfter: '/images/before-after-2.jpg'
   },
@@ -34,10 +34,10 @@ const services = [
       'Protective sealing to prevent future damage'
     ],
     benefits: ['Invisible mends', 'Restored structural integrity', 'Flawless aesthetic appearance'],
-    timeline: '4-7 days',
-    image: '/images/service-restoration.jpg',
-    previewBefore: '/images/before-after-2.jpg',
-    previewAfter: '/images/before-after-3.jpg'
+    timeline: '15-20 days',
+    image: '/images/main_resto.jpg',
+    previewBefore: '/images/restor_befor.JPG',
+    previewAfter: '/images/resto_after.JPG'
   },
   {
     id: 're-colouring',
@@ -51,10 +51,10 @@ const services = [
       'Finish selection (matte, satin, or gloss) and final protection'
     ],
     benefits: ['Perfectly accurate color matching', 'Vibrant and long-lasting finish', 'Can transform an item’s look'],
-    timeline: '4-6 days',
-    image: '/images/service-recolouring.jpg',
-    previewBefore: '/images/before-after-3.jpg',
-    previewAfter: '/images/before-after-1.jpg'
+    timeline: '10-15 days',
+    image: '/images/main_recolor.jpg',
+    previewBefore: '/images/befor_recolor.jpg',
+    previewAfter: '/images/after_recolor.jpg'
   },
   {
     id: 'repairs',
@@ -68,10 +68,10 @@ const services = [
       'Durability testing to ensure smooth operation'
     ],
     benefits: ['Smooth operation of hardware', 'Reinforced structural integrity', 'Finish-matched parts for a cohesive look'],
-    timeline: '3-5 days',
-    image: '/images/service-repairs.jpg',
-    previewBefore: '/images/before-after-1.jpg',
-    previewAfter: '/images/before-after-2.jpg'
+    timeline: '15-20 days',
+    image: '/images/main_repair.png',
+    previewBefore: '/images/bag_befor.jpg',
+    previewAfter: '/images/baf_after.jpg'
   },
   {
     id: 'personalisation',
@@ -85,8 +85,8 @@ const services = [
       'Final quality check and delivery'
     ],
     benefits: ['Unique, one-of-a-kind items', 'Elevates your favorite brand', 'Reflects your personal style'],
-    timeline: '5-10 days',
-    image: '/images/service-personalisation.jpg',
+    timeline: '15-20 days',
+    image: '/images/main_personal.jpg',
     previewBefore: '/images/before-after-2.jpg',
     previewAfter: '/images/before-after-3.jpg'
   },
@@ -103,7 +103,7 @@ const services = [
     ],
     benefits: ['Restores elegance and comfort', 'Extends the life of your furniture', 'Saves you from costly replacement'],
     timeline: 'Custom',
-    image: '/images/service-home.jpg',
+    image: '/images/home.png',
     previewBefore: '/images/before-after-3.jpg',
     previewAfter: '/images/before-after-1.jpg'
   },
@@ -120,7 +120,7 @@ const services = [
     ],
     benefits: ['Restores a premium look and feel', 'Increases your vehicle’s value', 'Protects against wear and tear'],
     timeline: 'Custom',
-    image: '/images/service-luxe-drive.jpg',
+    image: '/images/lux.png',
     previewBefore: '/images/before-after-1.jpg',
     previewAfter: '/images/before-after-2.jpg'
   },
@@ -140,16 +140,18 @@ const ServicesPage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-96 md:h-[500px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="absolute inset-0 z-0">
-          <div
-            className="w-full h-full bg-cover bg-center bg-no-repeat opacity-30"
-            style={{
-              backgroundImage: "url('/images/hero-bg.jpg')"
-            }}
+      <section className="relative h-[700px] md:h-[90vh] flex items-center justify-center overflow-hidden bg-black">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <img
+            src='/images/hero_services.jpg'
+            alt="Hero Background"
+            className="w-full h-full object-cover object-center  opacity-60"
           />
           <div className="absolute inset-0 bg-black/40" />
         </div>
+
+        {/* Content */}
         <div className="relative z-10 text-center text-white px-4">
           <motion.h1
             className="font-copperplate text-5xl md:text-7xl font-bold mb-6"
@@ -169,6 +171,7 @@ const ServicesPage = () => {
           </motion.p>
         </div>
       </section>
+
 
       {/* Services List */}
       <section className="section-padding bg-sand-medium dark:bg-dark-bg">
