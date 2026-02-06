@@ -175,9 +175,11 @@ const Footer = () => {
             })}
           </div>
           {/* Slogan - Centered */}
-          {/* <p className="text-fawn font-copperplate font-semibold text-lg text-center md:flex-grow">
-            Réstorée: Luxury care, redefined.
-          </p> */}
+          {/* Powered By & GST - Centered */}
+          <div className="flex flex-col items-center justify-center text-center md:flex-grow space-y-1 mx-4">
+             <p className="text-gray-500 text-[10px] uppercase tracking-widest">powered by <span className="font-semibold text-fawn">THE LAUNDRY COMPANY</span></p>
+             <p className="text-gray-600 text-[10px] tracking-wide">GST NO : 27ARUPK9212D2ZJ</p>
+          </div>
           {/* Copyright - Right aligned */}
           <p className="text-center md:text-right w-full md:w-auto md:flex-initial">© {currentYear} Réstorée. All rights reserved.</p>
         </div>
