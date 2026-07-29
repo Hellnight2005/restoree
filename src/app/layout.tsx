@@ -33,8 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        {/* Google tag (gtag.js) */}
+      <head>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-SWKE4VSF1R"
           strategy="afterInteractive"
@@ -48,6 +47,8 @@ export default function RootLayout({
             gtag('config', 'G-SWKE4VSF1R');
           `}
         </Script>
+      </head>
+      <body className={inter.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
