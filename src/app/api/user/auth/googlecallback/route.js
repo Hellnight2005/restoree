@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { connectToDb } from "@/lib/db";
 import User from "@/models/user";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req) {
   await connectToDb();
   const { searchParams } = new URL(req.url);

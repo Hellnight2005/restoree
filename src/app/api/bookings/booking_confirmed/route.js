@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { connectToDb } from "@/lib/db";
 import Booking from "@/models/booking";
 
+export const dynamic = "force-dynamic";
+
 // This handles GET requests to the /api/bookings route
 export async function GET(request) {
   await connectToDb();

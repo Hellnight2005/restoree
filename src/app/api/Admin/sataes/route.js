@@ -4,6 +4,8 @@ import Booking from "@/models/booking";
 import User from "@/models/user";
 import Service from "@/models/service";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     await connectToDb();
